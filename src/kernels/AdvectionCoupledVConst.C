@@ -12,7 +12,7 @@ AdvectionCoupledVConst::validParams()
 {
   InputParameters params = Kernel::validParams();
   params.addClassDescription("Coupled Advection. "
-							 "Constant velocity. ");
+                             "Constant velocity. ");
   params.addRequiredCoupledVar("velocity", "Velocity vector");
   params.addCoupledVar("rho_coupled", 0.0, "Coupled dislocation density in the flux term.");
   return params;
@@ -53,17 +53,16 @@ Real
 AdvectionCoupledVConst::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // It gets called via Kernel::computeOffDiagJacobian()
-  
+
   if (_rho_coupled_coupled && jvar == _rho_coupled_var)
   {
-		
+
     return negSpeedQp() * _phi[_j][_qp];
-	
   }
-  else {
-	  
-	return 0.0;
-	
+  else
+  {
+
+    return 0.0;
   }
 }
 

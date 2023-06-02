@@ -36,25 +36,25 @@ protected:
     CALCULATE_RESIDUAL = 0,
     CALCULATE_JACOBIAN = 1
   };
-  
+
   // Edge slip directions of all slip systems
   // const MaterialProperty<std::vector<Real>> & _edge_slip_direction;
 
   // Screw slip directions of all slip systems
   // const MaterialProperty<std::vector<Real>> & _screw_slip_direction;
-  
+
   // Dislocation velocity value (signed) on all slip systems
   const MaterialProperty<std::vector<Real>> & _dislo_velocity;
 
   /// Type of upwinding
   const enum class UpwindingType { none, full } _upwinding;
-  
+
   // Slip system index to determine slip direction
   const unsigned int _slip_sys_index;
-  
+
   // Sign of dislocations
   const enum class DisloSign { positive, negative } _dislo_sign;
-  
+
   // Character of dislocations (edge or screw)
   // const enum class DisloCharacter { edge, screw } _dislo_character;
 

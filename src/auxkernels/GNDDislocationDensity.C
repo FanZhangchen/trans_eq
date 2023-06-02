@@ -43,5 +43,5 @@ GNDDislocationDensity::computeValue()
   // Access the gradient of the pressure at this quadrature point, then pull out the "component" of
   // it requested (x, y or z). Note, that getting a particular component of a gradient is done using
   // the parenthesis operator.
-  return (_rhoep[_qp] - _rhoen[_qp])/16000;
+  return (_rhoep[_qp] - _rhoen[_qp]) / 16000;
 }

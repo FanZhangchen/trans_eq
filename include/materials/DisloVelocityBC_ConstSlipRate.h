@@ -28,7 +28,6 @@ protected:
 
   std::vector<Real> _gssT;
 
-
 private:
   /// member variable to hold the computed diffusivity coefficient
   MaterialProperty<std::vector<Real>> & _dislo_velocity;
@@ -40,5 +39,4 @@ private:
   const VariableValue & _rhoen;
 
   Real _initial_velocity;
-
 };

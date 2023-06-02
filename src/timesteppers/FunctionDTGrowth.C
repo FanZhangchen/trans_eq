@@ -30,8 +30,8 @@ FunctionDTGrowth::validParams()
                         "This is true by default for historical reasons.");
   params.addClassDescription(
       "Timestepper whose steps vary over time according to a user-defined function"
-	  "Apply growth factor to all time steps"
-	  "not only the time step just after cutback");
+      "Apply growth factor to all time steps"
+      "not only the time step just after cutback");
 
   return params;
 }

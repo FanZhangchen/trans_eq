@@ -47,5 +47,4 @@ protected:
   bool _interpolate;
 
   std::vector<Real> _time_knots;
-
 };

@@ -22,7 +22,7 @@ CoupledDiffusion::CoupledDiffusion(const InputParameters & parameters)
     _velocity_vector(coupledGradient("coupled_variable")),
     _is_var_coupled(isCoupled("coupled_variable")),
     _coupled_var(_is_var_coupled ? coupled("coupled_variable") : 0),
-	_coef(getParam<Real>("coef"))
+    _coef(getParam<Real>("coef"))
 {
 }
 
@@ -42,17 +42,15 @@ CoupledDiffusion::computeQpJacobian()
 Real
 CoupledDiffusion::computeQpOffDiagJacobian(unsigned int jvar)
 {
-	
+
   if (_is_var_coupled && jvar == _coupled_var)
   {
-	
-	return _coef * (_grad_test[_i][_qp] * _grad_phi[_j][_qp]);
 
+    return _coef * (_grad_test[_i][_qp] * _grad_phi[_j][_qp]);
   }
-  else {
-	  
-	return 0.0;
-	
-  } 	
-}
+  else
+  {
 
+    return 0.0;
+  }
+}

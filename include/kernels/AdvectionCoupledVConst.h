@@ -21,7 +21,7 @@ public:
 protected:
   /// Returns - _grad_test * velocity
   Real negSpeedQp() const;
-  
+
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
   virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
@@ -31,11 +31,10 @@ protected:
 
   /// advection velocity
   const VectorVariableValue & _velocity;
-  
+
   // Coupled dislocation density in the flux term
   const VariableValue & _rho_coupled;
-  
-  const bool _rho_coupled_coupled;
-  unsigned int _rho_coupled_var; 
 
+  const bool _rho_coupled_coupled;
+  unsigned int _rho_coupled_var;
 };

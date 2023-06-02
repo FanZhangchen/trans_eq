@@ -27,6 +27,6 @@ private:
   const VariableGradient & _velocity_vector;
   const bool _is_var_coupled;
   unsigned int _coupled_var;
-  
+
   const Real & _coef;
 };

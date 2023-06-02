@@ -9,7 +9,6 @@
 #include <fstream>
 #include <cmath>
 
-
 registerMooseObject("TransEQApp", DisloVelocityBC_ConstSlipRate);
 
 InputParameters
@@ -58,7 +57,6 @@ DisloVelocityBC_ConstSlipRate::initQpStatefulProperties()
   {
     _dislo_velocity[_qp][i] = _initial_velocity;
   }
-
 }
 
 void
@@ -67,7 +65,7 @@ DisloVelocityBC_ConstSlipRate::computeQpProperties()
 
   _dislo_velocity[_qp].resize(_nss);
   // _ddislo_velocity_dtau[_qp].resize(_nss);
-  
+
   for (unsigned int i = 0; i < _nss; ++i) // initial the _dislo_velocity
   {
     _dislo_velocity[_qp][i] = _velocity_old[_qp][i];
@@ -79,5 +77,4 @@ DisloVelocityBC_ConstSlipRate::computeQpProperties()
 
   //   _dislo_velocity[_qp][i] = 0.0;
   // }
-
 }

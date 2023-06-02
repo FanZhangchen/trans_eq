@@ -34,5 +34,4 @@ protected:
   const VariableValue & _rhoep;
 
   const VariableValue & _rhoen;
-
 };

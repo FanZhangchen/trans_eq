@@ -41,5 +41,4 @@ private:
   Real _initial_velocity;
 
   Real _slip_rate;
-
 };

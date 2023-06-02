@@ -18,11 +18,11 @@ DGAdvectionCoupledVConst::validParams()
 
 DGAdvectionCoupledVConst::DGAdvectionCoupledVConst(const InputParameters & parameters)
   : DGKernel(parameters),
-    _rho_coupled(coupledValue("rho_coupled")), // Coupled dislocation density in the flux term 
+    _rho_coupled(coupledValue("rho_coupled")), // Coupled dislocation density in the flux term
     _rho_coupled_coupled(isCoupled("rho_coupled")),
     _rho_coupled_var(_rho_coupled_coupled ? coupled("rho_coupled") : 0),
-	_rho_neighbor(coupledNeighborValue("rho_coupled")),
-	_velocity(getParam<RealVectorValue>("velocity"))
+    _rho_neighbor(coupledNeighborValue("rho_coupled")),
+    _velocity(getParam<RealVectorValue>("velocity"))
 {
 }
 
@@ -62,7 +62,8 @@ DGAdvectionCoupledVConst::computeQpOffDiagJacobian(Moose::DGJacobianType type, u
   Real r = 0;
   Real vdotn;
 
-  if (_rho_coupled_coupled && jvar == _rho_coupled_var) {
+  if (_rho_coupled_coupled && jvar == _rho_coupled_var)
+  {
 
     vdotn = _velocity * _normals[_qp];
 
@@ -88,7 +89,6 @@ DGAdvectionCoupledVConst::computeQpOffDiagJacobian(Moose::DGJacobianType type, u
           r -= vdotn * _phi_neighbor[_j][_qp] * _test_neighbor[_i][_qp];
         break;
     }
-
   }
 
   return r;

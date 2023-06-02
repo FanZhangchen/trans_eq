@@ -22,7 +22,7 @@ public:
 
 protected:
   virtual void computeQpProperties() override;
-  
+
   virtual void initQpStatefulProperties();
 
   const unsigned int _nss;
@@ -36,7 +36,7 @@ protected:
   const Real _burgersvector;
 
   const Real _F0;
-  
+
   const Real _gamma0dot;
 
   const Real _lambda;
@@ -72,5 +72,4 @@ private:
   MaterialProperty<Real> & _rho_edge;
 
   MaterialProperty<Real> & _tau_backstress;
-
 };

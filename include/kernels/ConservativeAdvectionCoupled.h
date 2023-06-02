@@ -38,41 +38,41 @@ protected:
     CALCULATE_RESIDUAL = 0,
     CALCULATE_JACOBIAN = 1
   };
-  
+
   // Coupled dislocation density in the flux term
   const VariableValue & _rho_coupled;
-  
+
   const bool _rho_coupled_coupled;
-  unsigned int _rho_coupled_var;  
-  
+  unsigned int _rho_coupled_var;
+
   // Edge slip directions of all slip systems
   const MaterialProperty<std::vector<Real>> & _edge_slip_direction;
 
   // Screw slip directions of all slip systems
   const MaterialProperty<std::vector<Real>> & _screw_slip_direction;
-  
+
   // Dislocation velocity value (signed) on all slip systems
   const MaterialProperty<std::vector<Real>> & _dislo_velocity;
 
   /// Type of upwinding
   const enum class UpwindingType { none, full } _upwinding;
-  
+
   // Slip system index to determine slip direction
   const unsigned int _slip_sys_index;
-  
+
   // Sign of dislocations
   const enum class DisloSign { positive, negative } _dislo_sign;
-  
+
   // Character of dislocations (edge or screw)
   const enum class DisloCharacter { edge, screw } _dislo_character;
-  
+
   // Check that dislocation density is positive
   // if it went below zero, it should not be further decreased
-  bool _check_rho_positive; 
+  bool _check_rho_positive;
 
   /// Nodal value of u, used for full upwinding
   const VariableValue & _u_coupled_nodal;
-  //const VariableValue & _u_nodal;
+  // const VariableValue & _u_nodal;
 
   /// In the full-upwind scheme, whether a node is an upwind node
   std::vector<bool> _upwind_node;

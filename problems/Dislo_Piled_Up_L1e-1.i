@@ -115,17 +115,17 @@
   [rhoep]
     type = LineValueSampler
     variable = rhoep
-    start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 21
+    start_point = '0 0.05 0'
+    end_point = '0.1 0.05 0'
+    num_points = 41
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
     variable = rhoen
-    start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 21
+    start_point = '0 0.05 0'
+    end_point = '0.1 0.05 0'
+    num_points = 41
     sort_by = x
   []
 []

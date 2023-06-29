@@ -106,7 +106,7 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 0.2
+  end_time = 0.75
   dt = 5.e-5
   dtmin = 1.e-9
 []
@@ -116,25 +116,26 @@
     type = LineValueSampler
     variable = rhoep
     start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 21
+    end_point = '1 0.005 0'
+    num_points = 41
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
     variable = rhoen
     start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 21
+    end_point = '1 0.005 0'
+    num_points = 41
     sort_by = x
   []
 []
 
 [Outputs]
   exodus = true
+  interval = 10
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l1_impbc
+    file_base = rhoe_x_out_l1
     execute_on = final
   []
 []

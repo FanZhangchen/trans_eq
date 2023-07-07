@@ -20,57 +20,6 @@ FiniteStrainCrystalPlasticityDislo::validParams()
   // params.addCoupledVar("q_t",0.0,"Curvature density (only one slip system)");
   params.addCoupledVar("rho_edge_pos_1", 0.0, "Positive edge dislocation density: slip system 1");
   params.addCoupledVar("rho_edge_neg_1", 0.0, "Negative edge dislocation density: slip system 1");
-  // params.addCoupledVar("rho_edge_pos_2",0.0,"Positive edge dislocation density: slip system 2");
-  // params.addCoupledVar("rho_edge_neg_2",0.0,"Negative edge dislocation density: slip system 2");
-  // params.addCoupledVar("rho_edge_pos_3",0.0,"Positive edge dislocation density: slip system 3");
-  // params.addCoupledVar("rho_edge_neg_3",0.0,"Negative edge dislocation density: slip system 3");
-  // params.addCoupledVar("rho_edge_pos_4",0.0,"Positive edge dislocation density: slip system 4");
-  // params.addCoupledVar("rho_edge_neg_4",0.0,"Negative edge dislocation density: slip system 4");
-  // params.addCoupledVar("rho_edge_pos_5",0.0,"Positive edge dislocation density: slip system 5");
-  // params.addCoupledVar("rho_edge_neg_5",0.0,"Negative edge dislocation density: slip system 5");
-  // params.addCoupledVar("rho_edge_pos_6",0.0,"Positive edge dislocation density: slip system 6");
-  // params.addCoupledVar("rho_edge_neg_6",0.0,"Negative edge dislocation density: slip system 6");
-  // params.addCoupledVar("rho_edge_pos_7",0.0,"Positive edge dislocation density: slip system 7");
-  // params.addCoupledVar("rho_edge_neg_7",0.0,"Negative edge dislocation density: slip system 7");
-  // params.addCoupledVar("rho_edge_pos_8",0.0,"Positive edge dislocation density: slip system 8");
-  // params.addCoupledVar("rho_edge_neg_8",0.0,"Negative edge dislocation density: slip system 8");
-  // params.addCoupledVar("rho_edge_pos_9",0.0,"Positive edge dislocation density: slip system 9");
-  // params.addCoupledVar("rho_edge_neg_9",0.0,"Negative edge dislocation density: slip system 9");
-  // params.addCoupledVar("rho_edge_pos_10",0.0,"Positive edge dislocation density: slip system
-  // 10"); params.addCoupledVar("rho_edge_neg_10",0.0,"Negative edge dislocation density: slip
-  // system 10"); params.addCoupledVar("rho_edge_pos_11",0.0,"Positive edge dislocation density:
-  // slip system 11"); params.addCoupledVar("rho_edge_neg_11",0.0,"Negative edge dislocation
-  // density: slip system 11"); params.addCoupledVar("rho_edge_pos_12",0.0,"Positive edge
-  // dislocation density: slip system 12"); params.addCoupledVar("rho_edge_neg_12",0.0,"Negative
-  // edge dislocation density: slip system 12");
-  // params.addCoupledVar("rho_screw_pos_1",0.0,"Positive screw dislocation density: slip system
-  // 1"); params.addCoupledVar("rho_screw_neg_1",0.0,"Negative screw dislocation density: slip
-  // system 1"); params.addCoupledVar("rho_screw_pos_2",0.0,"Positive screw dislocation density:
-  // slip system 2"); params.addCoupledVar("rho_screw_neg_2",0.0,"Negative screw dislocation
-  // density: slip system 2"); params.addCoupledVar("rho_screw_pos_3",0.0,"Positive screw
-  // dislocation density: slip system 3"); params.addCoupledVar("rho_screw_neg_3",0.0,"Negative
-  // screw dislocation density: slip system 3");
-  // params.addCoupledVar("rho_screw_pos_4",0.0,"Positive screw dislocation density: slip system
-  // 4"); params.addCoupledVar("rho_screw_neg_4",0.0,"Negative screw dislocation density: slip
-  // system 4"); params.addCoupledVar("rho_screw_pos_5",0.0,"Positive screw dislocation density:
-  // slip system 5"); params.addCoupledVar("rho_screw_neg_5",0.0,"Negative screw dislocation
-  // density: slip system 5"); params.addCoupledVar("rho_screw_pos_6",0.0,"Positive screw
-  // dislocation density: slip system 6"); params.addCoupledVar("rho_screw_neg_6",0.0,"Negative
-  // screw dislocation density: slip system 6");
-  // params.addCoupledVar("rho_screw_pos_7",0.0,"Positive screw dislocation density: slip system
-  // 7"); params.addCoupledVar("rho_screw_neg_7",0.0,"Negative screw dislocation density: slip
-  // system 7"); params.addCoupledVar("rho_screw_pos_8",0.0,"Positive screw dislocation density:
-  // slip system 8"); params.addCoupledVar("rho_screw_neg_8",0.0,"Negative screw dislocation
-  // density: slip system 8"); params.addCoupledVar("rho_screw_pos_9",0.0,"Positive screw
-  // dislocation density: slip system 9"); params.addCoupledVar("rho_screw_neg_9",0.0,"Negative
-  // screw dislocation density: slip system 9");
-  // params.addCoupledVar("rho_screw_pos_10",0.0,"Positive screw dislocation density: slip system
-  // 10"); params.addCoupledVar("rho_screw_neg_10",0.0,"Negative screw dislocation density: slip
-  // system 10"); params.addCoupledVar("rho_screw_pos_11",0.0,"Positive screw dislocation density:
-  // slip system 11"); params.addCoupledVar("rho_screw_neg_11",0.0,"Negative screw dislocation
-  // density: slip system 11"); params.addCoupledVar("rho_screw_pos_12",0.0,"Positive screw
-  // dislocation density: slip system 12"); params.addCoupledVar("rho_screw_neg_12",0.0,"Negative
-  // screw dislocation density: slip system 12");
   params.addCoupledVar("rho_forest", 0.0, "Forest dislocation density");
   params.addParam<Real>("thermal_expansion", 0.0, "Thermal expansion coefficient");
   params.addParam<Real>(
@@ -89,7 +38,7 @@ FiniteStrainCrystalPlasticityDislo::validParams()
                         "resolved shear stress with temperature: A + B exp(- C * (T - 293.0))");
   params.addParam<Real>("dislo_mobility", 0.0, "Dislocation mobility");
   params.addParam<Real>("reduced_mobility", 0.0, "Ratio between mobility above vmax and mobility");
-  params.addParam<Real>("burgers_vector_mag", 0.0, "Magnitude of the Burgers vector");
+  params.addParam<Real>("burgers_vector_mag", 0.257e-6, "Magnitude of the Burgers vector");
   params.addParam<Real>(
       "shear_modulus_hardening", 86000.0, "Shear modulus in Taylor hardening law");
   params.addParam<Real>("dislo_max_velocity", 1000.0, "Maximum dislocation velocity (phonon drag)");
@@ -100,6 +49,8 @@ FiniteStrainCrystalPlasticityDislo::validParams()
       "rho_v_thres", 0.001, "Dislo density threshold below which velocity goes to zero");
   params.addParam<bool>(
       "rho_v_thres_flag", false, "Flag to determine whether to apply the previous threshold");
+
+  params.addParam<Real>("boltzmann", 1.38065e-23, "The Boltzmann Constant");
 
   params.addParam<Real>("abstemp", 298, "The absolute temperature");
 
@@ -130,8 +81,6 @@ FiniteStrainCrystalPlasticityDislo::validParams()
 FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
     const InputParameters & parameters)
   : FiniteStrainCrystalPlasticity(parameters),
-    _temp(coupledValue("temp")),
-    _q_t(coupledValue("q_t")),
 
     _rho_edge_pos_1(coupledValue("rho_edge_pos_1")),
 
@@ -141,7 +90,6 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
 
     _grad_rhoen1(coupledGradient("rho_edge_neg_1")), // Coupled rhoen gradient
 
-    _rho_forest(coupledValue("rho_forest")),
     _thermal_expansion(getParam<Real>("thermal_expansion")),
     _reference_temperature(getParam<Real>("reference_temperature")),
     _dCRSS_dT_A(getParam<Real>("dCRSS_dT_A")),
@@ -160,7 +108,9 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
         getParam<Real>("rho_v_thres")), // Dislo density threshold below which velocity goes to zero
     _rho_v_thres_flag(getParam<bool>(
         "rho_v_thres_flag")), // Flag to determine whether to apply the previous threshold
+
     _gssT(_nss),
+
     _edge_slip_direction(
         declareProperty<std::vector<Real>>("edge_slip_direction")), // Edge slip directions
     _screw_slip_direction(
@@ -170,7 +120,9 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
     _dislo_velocity(declareProperty<std::vector<Real>>("dislo_velocity")), // Dislocation velocity
     _ddislo_velocity_dtau(
         declareProperty<std::vector<Real>>("ddislo_velocity_dtau")), // Derivative of dislo velocity
-    _tau_out(declareProperty<std::vector<Real>>("tau_out")) // resolved shear stress for output
+    _tau_out(declareProperty<std::vector<Real>>("tau_out")), // resolved shear stress for output
+
+    _boltzmann(getParam<Real>("boltzmann")),
 
     _abstemp(getParam<Real>("abstemp")),
 
@@ -190,13 +142,11 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
 
     _taualpha(getParam<Real>("taualpha")),
 
-    _burgersvector(getParam<Real>("burgersvector")),
+    _slip_rate_out(declareProperty<std::vector<Real>>("slip_rate")),
 
-    _rho_edge(declareProperty<Real>("rho_edge")),
+    _tau_backstress(_nss),
 
-    _tau_backstress(declareProperty<Real>("tau_backstress")),
-
-    _slip_rate(declareProperty<Real>("slip_rate"))
+    _slip_rate(_nss)
 {
 }
 
@@ -204,17 +154,28 @@ void
 FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
 {
   RankTwoTensor iden, ce, ee, ce_pk2, eqv_slip_incr, pk2_new;
-  Real temp = _temp[_qp];
-  Real thermal_expansion = _thermal_expansion;
-  Real reference_temperature = _reference_temperature;
+  // Real temp = _temp[_qp];
+  // Real thermal_expansion = _thermal_expansion;
+  // Real reference_temperature = _reference_temperature;
 
   iden.zero();
   iden.addIa(1.0);
+
+  mooseWarning("_fp[_qp]", _fp[_qp]);
+  mooseWarning("_fp_old[_qp]", _fp_old[_qp]);
 
   _fe = _dfgrd_tmp * _fp_prev_inv; // _fp_inv  ==> _fp_prev_inv
   ce = _fe.transpose() * _fe;
   ce_pk2 = ce * _pk2_tmp;
   ce_pk2 = ce_pk2 / _fe.det();
+
+  mooseWarning("_dfgrd_tmp", _dfgrd_tmp);
+  mooseWarning("_fp_prev_inv", _fp_prev_inv);
+  mooseWarning("_fe", _fe);
+  mooseWarning("ce", ce);
+  mooseWarning("_pk2_tmp", _pk2_tmp);
+  mooseWarning("_fe.det()", _fe.det());
+  mooseWarning("ce_pk2", ce_pk2);
 
   // Calculate Schmid tensor and resolved shear stresses
   for (unsigned int i = 0; i < _nss; ++i)
@@ -228,8 +189,8 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
     _tau_out[_qp][i] = _tau(i);
   }
 
-  // Introduce temperature dependence of the CRSS
-  // TempDependCRSS();
+  // Introduce the CRSS that will be used in the getSlipIncrements()
+  TmpDependCRSS();
 
   // necessary to call it here because getDisloVelocity
   // depends on slip rate, changing at each iteration
@@ -245,20 +206,34 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
 
   eqv_slip_incr.zero();
   for (unsigned int i = 0; i < _nss; ++i)
+  {
     eqv_slip_incr += _s0[i] * _slip_incr(i);
+    mooseWarning("_s0[i]", _s0[i]);
+    mooseWarning("_slip_incr(i)", _slip_incr(i));
+  }
+
+
 
   eqv_slip_incr = iden - eqv_slip_incr;
   _fp_inv = _fp_old_inv * eqv_slip_incr;
+
+  mooseWarning("_fp_inv", _fp_inv);
+  mooseWarning("_fp_old_inv", _fp_old_inv);
+  mooseWarning("eqv_slip_incr", eqv_slip_incr);
+
   _fe = _dfgrd_tmp * _fp_inv;
 
   ce = _fe.transpose() * _fe;
   ee = ce - iden;
   ee *= 0.5;
-  RankTwoTensor thermal_eigenstrain;
-  thermal_eigenstrain =
-      (1.0 / 2.0) *
-      (std::exp((2.0 / 3.0) * thermal_expansion * (temp - reference_temperature)) - 1.0) * iden;
-  pk2_new = _elasticity_tensor[_qp] * (ee - thermal_eigenstrain);
+  // RankTwoTensor thermal_eigenstrain;
+  // thermal_eigenstrain =
+  //     (1.0 / 2.0) *
+  //     (std::exp((2.0 / 3.0) * thermal_expansion * (temp - reference_temperature)) - 1.0) * iden;
+  pk2_new = _elasticity_tensor[_qp] * ee;
+
+  mooseWarning("ee", ee);
+  mooseWarning("pk2_new", pk2_new);
 
   resid = _pk2_tmp - pk2_new;
 
@@ -269,20 +244,19 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
 
 // Critical resolved shear stress decreases exponentially with temperature
 // A + B exp(- C * (T - 303.0))
-// void
-// FiniteStrainCrystalPlasticityDislo::TempDependCRSS()
-// {
-//   Real temp = _temp[_qp];
+void
+FiniteStrainCrystalPlasticityDislo::TmpDependCRSS()
+{
+  // Real temp = _temp[_qp];
+  // updateGss();
 
-//   // Critical resolved shear stress in the input file
-//   // refers always to room temperature
-//   for (unsigned int i = 0; i < _nss; ++i)
-//   {
-//     _gssT[i] = ( _dCRSS_dT_A + _dCRSS_dT_B * std::exp(- _dCRSS_dT_C * (temp -
-//     _reference_temperature))) *
-// 	           _gss_tmp[i];
-//   }
-// }
+  // Critical resolved shear stress in the input file
+  // refers always to room temperature
+  for (unsigned int i = 0; i < _nss; ++i)
+  {
+    _gssT[i] = _gss_tmp[i];
+  }
+}
 
 // Calculate slip increment,dslipdtau
 void
@@ -292,6 +266,9 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   std::vector<Real> rho_edge_neg(_nss);
   // std::vector<Real> rho_screw_pos(_nss);
   // std::vector<Real> rho_screw_neg(_nss);
+
+  std::vector<Real> rho_edge_pos_grad(_nss);
+  std::vector<Real> rho_edge_neg_grad(_nss);
 
   Real RhoTotSlip; // total dislocation density in the current slip system
 
@@ -322,59 +299,71 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   // rho_edge_neg[10] = _rho_edge_neg_11[_qp];
   // rho_edge_neg[11] = _rho_edge_neg_12[_qp];
 
+  // Assigin dislocation density gradient vectors
+  rho_edge_pos_grad[0] = _grad_rhoep1[_qp](1);
+
+  rho_edge_neg_grad[0] = _grad_rhoen1[_qp](1);
+
   // Positive and negative dislocation give the same
   // contribution to Lp even if their velocity is opposite
   // same for edge and screw
   for (unsigned int i = 0; i < _nss; ++i)
   {
     // temporary variable
-    RhoTotSlip = rho_edge_pos[i] + rho_edge_neg[i] // + rho_screw_pos[i] + rho_screw_neg[i];
+    RhoTotSlip = rho_edge_pos[i] + rho_edge_neg[i]; // + rho_screw_pos[i] + rho_screw_neg[i];
 
-                 // calculate the backstress term
-                 _tau_backstress[_qp] = _burgers_vector_mag * _mu *
-                                        (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / RhoTotSlip;
+    // calculate the backstress term
+    _tau_backstress(i) = _burgers_vector_mag * _mu *
+                 (rho_edge_pos_grad[i] - rho_edge_neg_grad[i]) / RhoTotSlip;
 
     if (RhoTotSlip > 0.0)
     {
 
-      _slip_rate[_qp] = _gamma0dot *
-                        std::exp(-_F0 / _boltzmann / _abstemp *
-                                 std::pow((1 - std::pow(((std::abs(_tau(i) - _tau_backstress[_qp]) -
-                                                          _lambda * _mu * _burgers_vector_mag *
-                                                              std::sqrt(RhoTotSlip)) /
-                                                         _tau0hat),
-                                                        _p)),
-                                          _q)) *
-                        std::copysign(1.0, (_tau(i) - _tau_backstress[_qp]));
+      if (std::abs(_tau(i) - _tau_backstress(i)) > _gssT[i])
+      {
+        _slip_rate(i) = _gamma0dot *
+                              std::exp(-_F0 / _boltzmann / _abstemp *
+                                       std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
+                                                                _gssT[i]) / _tau0hat),
+                                                              _p)),
+                                                _q)) *
+                              std::copysign(1.0, (_tau(i) - _tau_backstress(i)));
+      }
+      else
+      {
+        _slip_rate(i) = 0.0;
+      }
 
-      _slip_incr(i) = _slip_rate[_qp] * _dt;
-
-      // Derivative is always positive
-      _dslipdtau(i) =
-          _gamma0dot * _p * _q * _F0 / _boltzmann / _abstemp *
-          std::exp(
-              -_F0 / _boltzmann / _abstemp *
-              std::pow(
-                  (1 - std::pow(((std::abs(_tau(i) - _tau_backstress[_qp]) -
-                                  _lambda * _mu * _burgers_vector_mag * std::sqrt(RhoTotSlip)) /
-                                 _tau0hat),
-                                _p)),
-                  _q)) *
-          std::pow((1 - std::pow(((std::abs(_tau(i) - _tau_backstress[_qp]) -
-                                   _lambda * _mu * _burgers_vector_mag * std::sqrt(RhoTotSlip)) /
-                                  _tau0hat),
-                                 _p)),
-                   _q - 1) *
-          std::pow(((std::abs(_tau(i) - _tau_backstress[_qp]) -
-                     _lambda * _mu * _burgers_vector_mag * std::sqrt(RhoTotSlip)) /
-                    _tau0hat),
-                   _p - 1) *
-          std::copysign(1.0, (_tau(i) - _tau_backstress[_qp])) * _dt;
+            _slip_incr(i) = _slip_rate(i) * _dt;
+      
+            // mooseWarning("slip resistance ", _gssT[i]);
+            mooseWarning("tau ", _tau(i));
+            // mooseWarning("The slip rate value is ", _slip_rate(i));
+      
+            // Derivative is always positive
+            _dslipdtau(i) =
+                _gamma0dot * _p * _q * _F0 / _boltzmann / _abstemp *
+                std::exp(
+                    -_F0 / _boltzmann / _abstemp *
+                    std::pow(
+                        (1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
+                                        _gssT[i]) / _tau0hat),
+                                      _p)),
+                        _q)) *
+                std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
+                                         _gssT[i]) / _tau0hat),
+                                       _p)),
+                         _q - 1.0) *
+                std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
+                           _gssT[i]) / _tau0hat),
+                         _p - 1.0) *
+                std::copysign(1.0, (_tau(i) - _tau_backstress(i))) * _dt;
     }
     else
     {
 
       _slip_incr(i) = 0.0;
+
       _dslipdtau(i) = 0.0;
     }
   }
@@ -389,11 +378,15 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
     }
   }
 
-  // store slip increment for output
+  // store slip increment and slip rate for output
   _slip_incr_out[_qp].resize(_nss);
+
+  _slip_rate_out[_qp].resize(_nss);
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
+    _slip_rate_out[_qp][i] = _slip_rate(i);
+
     _slip_incr_out[_qp][i] = _slip_incr(i);
   }
 }
@@ -460,15 +453,13 @@ FiniteStrainCrystalPlasticityDislo::getDisloVelocity()
 
     // if (_dislo_mobility > 0.0) {
     //   tau0 = _dislo_max_velocity / _dislo_mobility; // temporary variable for this slip system
-    //   tau0 += _gssT[i];
+    tau0 += _gssT[i];
     // }
-
-    tau0 = _tau0hat;
 
     if (std::abs(_tau(i)) > tau0)
     { // Case above _dislo_max_velocity: use reduced mobility
 
-      _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgers_vector_mag / RhoTotSlip;
+      _dislo_velocity[_qp][i] = _slip_rate(i) / _burgers_vector_mag / RhoTotSlip;
 
       // Derivative is always positive
       // _ddislo_velocity_dtau[_qp][i] = _reduced_mobility;
@@ -707,65 +698,65 @@ FiniteStrainCrystalPlasticityDislo::getMatRot(const RankTwoTensor & a)
     mooseWarning("Deformation gradient components (2,1)", _deformation_gradient[_qp](2, 1));
     mooseWarning("Deformation gradient components (2,2)", _deformation_gradient[_qp](2, 2));
     mooseWarning("Rho edge pos 1 ", _rho_edge_pos_1[_qp]);
-    mooseWarning("Rho edge pos 2 ", _rho_edge_pos_2[_qp]);
-    mooseWarning("Rho edge pos 3 ", _rho_edge_pos_3[_qp]);
-    mooseWarning("Rho edge pos 4 ", _rho_edge_pos_4[_qp]);
-    mooseWarning("Rho edge pos 5 ", _rho_edge_pos_5[_qp]);
-    mooseWarning("Rho edge pos 6 ", _rho_edge_pos_6[_qp]);
-    mooseWarning("Rho edge pos 7 ", _rho_edge_pos_7[_qp]);
-    mooseWarning("Rho edge pos 8 ", _rho_edge_pos_8[_qp]);
-    mooseWarning("Rho edge pos 9 ", _rho_edge_pos_9[_qp]);
-    mooseWarning("Rho edge pos 10 ", _rho_edge_pos_10[_qp]);
-    mooseWarning("Rho edge pos 11 ", _rho_edge_pos_11[_qp]);
-    mooseWarning("Rho edge pos 12 ", _rho_edge_pos_12[_qp]);
+    // mooseWarning("Rho edge pos 2 ", _rho_edge_pos_2[_qp]);
+    // mooseWarning("Rho edge pos 3 ", _rho_edge_pos_3[_qp]);
+    // mooseWarning("Rho edge pos 4 ", _rho_edge_pos_4[_qp]);
+    // mooseWarning("Rho edge pos 5 ", _rho_edge_pos_5[_qp]);
+    // mooseWarning("Rho edge pos 6 ", _rho_edge_pos_6[_qp]);
+    // mooseWarning("Rho edge pos 7 ", _rho_edge_pos_7[_qp]);
+    // mooseWarning("Rho edge pos 8 ", _rho_edge_pos_8[_qp]);
+    // mooseWarning("Rho edge pos 9 ", _rho_edge_pos_9[_qp]);
+    // mooseWarning("Rho edge pos 10 ", _rho_edge_pos_10[_qp]);
+    // mooseWarning("Rho edge pos 11 ", _rho_edge_pos_11[_qp]);
+    // mooseWarning("Rho edge pos 12 ", _rho_edge_pos_12[_qp]);
     mooseWarning("Rho edge neg 1 ", _rho_edge_neg_1[_qp]);
-    mooseWarning("Rho edge neg 2 ", _rho_edge_neg_2[_qp]);
-    mooseWarning("Rho edge neg 3 ", _rho_edge_neg_3[_qp]);
-    mooseWarning("Rho edge neg 4 ", _rho_edge_neg_4[_qp]);
-    mooseWarning("Rho edge neg 5 ", _rho_edge_neg_5[_qp]);
-    mooseWarning("Rho edge neg 6 ", _rho_edge_neg_6[_qp]);
-    mooseWarning("Rho edge neg 7 ", _rho_edge_neg_7[_qp]);
-    mooseWarning("Rho edge neg 8 ", _rho_edge_neg_8[_qp]);
-    mooseWarning("Rho edge neg 9 ", _rho_edge_neg_9[_qp]);
-    mooseWarning("Rho edge neg 10 ", _rho_edge_neg_10[_qp]);
-    mooseWarning("Rho edge neg 11 ", _rho_edge_neg_11[_qp]);
-    mooseWarning("Rho edge neg 12 ", _rho_edge_neg_12[_qp]);
-    mooseWarning("Rho screw pos 1 ", _rho_screw_pos_1[_qp]);
-    mooseWarning("Rho screw pos 2 ", _rho_screw_pos_2[_qp]);
-    mooseWarning("Rho screw pos 3 ", _rho_screw_pos_3[_qp]);
-    mooseWarning("Rho screw pos 4 ", _rho_screw_pos_4[_qp]);
-    mooseWarning("Rho screw pos 5 ", _rho_screw_pos_5[_qp]);
-    mooseWarning("Rho screw pos 6 ", _rho_screw_pos_6[_qp]);
-    mooseWarning("Rho screw pos 7 ", _rho_screw_pos_7[_qp]);
-    mooseWarning("Rho screw pos 8 ", _rho_screw_pos_8[_qp]);
-    mooseWarning("Rho screw pos 9 ", _rho_screw_pos_9[_qp]);
-    mooseWarning("Rho screw pos 10 ", _rho_screw_pos_10[_qp]);
-    mooseWarning("Rho screw pos 11 ", _rho_screw_pos_11[_qp]);
-    mooseWarning("Rho screw pos 12 ", _rho_screw_pos_12[_qp]);
-    mooseWarning("Rho screw neg 1 ", _rho_screw_neg_1[_qp]);
-    mooseWarning("Rho screw neg 2 ", _rho_screw_neg_2[_qp]);
-    mooseWarning("Rho screw neg 3 ", _rho_screw_neg_3[_qp]);
-    mooseWarning("Rho screw neg 4 ", _rho_screw_neg_4[_qp]);
-    mooseWarning("Rho screw neg 5 ", _rho_screw_neg_5[_qp]);
-    mooseWarning("Rho screw neg 6 ", _rho_screw_neg_6[_qp]);
-    mooseWarning("Rho screw neg 7 ", _rho_screw_neg_7[_qp]);
-    mooseWarning("Rho screw neg 8 ", _rho_screw_neg_8[_qp]);
-    mooseWarning("Rho screw neg 9 ", _rho_screw_neg_9[_qp]);
-    mooseWarning("Rho screw neg 10 ", _rho_screw_neg_10[_qp]);
-    mooseWarning("Rho screw neg 11 ", _rho_screw_neg_11[_qp]);
-    mooseWarning("Rho screw neg 12 ", _rho_screw_neg_12[_qp]);
+    // mooseWarning("Rho edge neg 2 ", _rho_edge_neg_2[_qp]);
+    // mooseWarning("Rho edge neg 3 ", _rho_edge_neg_3[_qp]);
+    // mooseWarning("Rho edge neg 4 ", _rho_edge_neg_4[_qp]);
+    // mooseWarning("Rho edge neg 5 ", _rho_edge_neg_5[_qp]);
+    // mooseWarning("Rho edge neg 6 ", _rho_edge_neg_6[_qp]);
+    // mooseWarning("Rho edge neg 7 ", _rho_edge_neg_7[_qp]);
+    // mooseWarning("Rho edge neg 8 ", _rho_edge_neg_8[_qp]);
+    // mooseWarning("Rho edge neg 9 ", _rho_edge_neg_9[_qp]);
+    // mooseWarning("Rho edge neg 10 ", _rho_edge_neg_10[_qp]);
+    // mooseWarning("Rho edge neg 11 ", _rho_edge_neg_11[_qp]);
+    // mooseWarning("Rho edge neg 12 ", _rho_edge_neg_12[_qp]);
+    // mooseWarning("Rho screw pos 1 ", _rho_screw_pos_1[_qp]);
+    // mooseWarning("Rho screw pos 2 ", _rho_screw_pos_2[_qp]);
+    // mooseWarning("Rho screw pos 3 ", _rho_screw_pos_3[_qp]);
+    // mooseWarning("Rho screw pos 4 ", _rho_screw_pos_4[_qp]);
+    // mooseWarning("Rho screw pos 5 ", _rho_screw_pos_5[_qp]);
+    // mooseWarning("Rho screw pos 6 ", _rho_screw_pos_6[_qp]);
+    // mooseWarning("Rho screw pos 7 ", _rho_screw_pos_7[_qp]);
+    // mooseWarning("Rho screw pos 8 ", _rho_screw_pos_8[_qp]);
+    // mooseWarning("Rho screw pos 9 ", _rho_screw_pos_9[_qp]);
+    // mooseWarning("Rho screw pos 10 ", _rho_screw_pos_10[_qp]);
+    // mooseWarning("Rho screw pos 11 ", _rho_screw_pos_11[_qp]);
+    // mooseWarning("Rho screw pos 12 ", _rho_screw_pos_12[_qp]);
+    // mooseWarning("Rho screw neg 1 ", _rho_screw_neg_1[_qp]);
+    // mooseWarning("Rho screw neg 2 ", _rho_screw_neg_2[_qp]);
+    // mooseWarning("Rho screw neg 3 ", _rho_screw_neg_3[_qp]);
+    // mooseWarning("Rho screw neg 4 ", _rho_screw_neg_4[_qp]);
+    // mooseWarning("Rho screw neg 5 ", _rho_screw_neg_5[_qp]);
+    // mooseWarning("Rho screw neg 6 ", _rho_screw_neg_6[_qp]);
+    // mooseWarning("Rho screw neg 7 ", _rho_screw_neg_7[_qp]);
+    // mooseWarning("Rho screw neg 8 ", _rho_screw_neg_8[_qp]);
+    // mooseWarning("Rho screw neg 9 ", _rho_screw_neg_9[_qp]);
+    // mooseWarning("Rho screw neg 10 ", _rho_screw_neg_10[_qp]);
+    // mooseWarning("Rho screw neg 11 ", _rho_screw_neg_11[_qp]);
+    // mooseWarning("Rho screw neg 12 ", _rho_screw_neg_12[_qp]);
     mooseWarning("Slip increment ", _slip_incr(0));
-    mooseWarning("Slip increment ", _slip_incr(1));
-    mooseWarning("Slip increment ", _slip_incr(2));
-    mooseWarning("Slip increment ", _slip_incr(3));
-    mooseWarning("Slip increment ", _slip_incr(4));
-    mooseWarning("Slip increment ", _slip_incr(5));
-    mooseWarning("Slip increment ", _slip_incr(6));
-    mooseWarning("Slip increment ", _slip_incr(7));
-    mooseWarning("Slip increment ", _slip_incr(8));
-    mooseWarning("Slip increment ", _slip_incr(9));
-    mooseWarning("Slip increment ", _slip_incr(10));
-    mooseWarning("Slip increment ", _slip_incr(11));
+    // mooseWarning("Slip increment ", _slip_incr(1));
+    // mooseWarning("Slip increment ", _slip_incr(2));
+    // mooseWarning("Slip increment ", _slip_incr(3));
+    // mooseWarning("Slip increment ", _slip_incr(4));
+    // mooseWarning("Slip increment ", _slip_incr(5));
+    // mooseWarning("Slip increment ", _slip_incr(6));
+    // mooseWarning("Slip increment ", _slip_incr(7));
+    // mooseWarning("Slip increment ", _slip_incr(8));
+    // mooseWarning("Slip increment ", _slip_incr(9));
+    // mooseWarning("Slip increment ", _slip_incr(10));
+    // mooseWarning("Slip increment ", _slip_incr(11));
     mooseError(
         "FiniteStrainCrystalPlasticityDislo: DSYEV function call in getMatRot function failed");
   }

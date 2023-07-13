@@ -170,7 +170,7 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   ce_pk2 = ce * _pk2_tmp;
   ce_pk2 = ce_pk2 / _fe.det();
 
-  // if(_qp == 0) 
+  // if(_qp == 0)
   // {
   //   mooseWarning("_qp", _qp);
   //   mooseWarning("_dfgrd_tmp", _dfgrd_tmp);
@@ -181,7 +181,6 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   //   mooseWarning("_fe.det()", _fe.det());
   //   mooseWarning("ce_pk2", ce_pk2);
   // }
-  
 
   // Calculate Schmid tensor and resolved shear stresses
   for (unsigned int i = 0; i < _nss; ++i)
@@ -231,7 +230,6 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   //   mooseWarning("_fp_old_inv", _fp_old_inv);
   //   mooseWarning("eqv_slip_incr", eqv_slip_incr);
   // }
-  
 
   _fe = _dfgrd_tmp * _fp_inv;
 
@@ -336,7 +334,7 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
 
       _tau_judge = std::abs(_tau(i) - _tau_backstress(i));
 
-      if ( _tau_judge > _gssT[i])
+      if (_tau_judge > _gssT[i])
       {
         _slip_rate(i) =
             _gamma0dot *
@@ -346,8 +344,8 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
                                               _p)),
                               _q)) *
             std::copysign(1.0, (_tau(i) - _tau_backstress(i)));
-            // mooseWarning("_gssT[i] ", _gssT[i]);
-            // mooseWarning("_slip_rate(i)11111 ", _slip_rate(i));
+        // mooseWarning("_gssT[i] ", _gssT[i]);
+        // mooseWarning("_slip_rate(i)11111 ", _slip_rate(i));
       }
       else
       {
@@ -367,17 +365,18 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
       if (_tau_judge > _gssT[i])
       {
         _dslipdtau(i) =
-                _gamma0dot * _p * _q * _F0 / _boltzmann / _abstemp *
-                std::exp(-_F0 / _boltzmann / _abstemp *
-                         std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) /
-                                                   _tau0hat),
-                                                  _p)),
-                                  _q)) *
-                std::pow((1.0 -
-                          std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p)),
-                         _q - 1.0) *
-                std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p - 1.0) *
-                std::copysign(1.0, (_tau(i) - _tau_backstress(i))) * _dt;
+            _gamma0dot * _p * _q * _F0 / _boltzmann / _abstemp *
+            std::exp(-_F0 / _boltzmann / _abstemp *
+                     std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) /
+                                               _tau0hat),
+                                              _p)),
+                              _q)) *
+            std::pow(
+                (1.0 -
+                 std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p)),
+                _q - 1.0) *
+            std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p - 1.0) *
+            std::copysign(1.0, (_tau(i) - _tau_backstress(i))) * _dt;
       }
       else
       {

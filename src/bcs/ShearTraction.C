@@ -138,7 +138,8 @@ ShearTraction::computeStiffness(const unsigned int coupled_component)
 }
 
 Real
-ShearTraction::computeFaceStiffness(const unsigned int local_j, const unsigned int coupled_component)
+ShearTraction::computeFaceStiffness(const unsigned int local_j,
+                                    const unsigned int coupled_component)
 {
   //
   // Note that this approach will break down for shell elements, i.e.,

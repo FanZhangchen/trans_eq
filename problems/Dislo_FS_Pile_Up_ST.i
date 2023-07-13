@@ -4,14 +4,17 @@
 
 [Mesh]
   type = GeneratedMesh
-  dim = 2
+  dim = 3
   nx = 1
   ny = 1
+  nz = 1
   xmin = 0.0
   ymin = 0.0
-  xmax = 0.1
-  ymax = 0.1  
-  displacements = 'disp_x disp_y'
+  zmin = 0.0
+  xmax = 1.0
+  ymax = 1.0
+  zmax = 1.0
+  displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
@@ -20,6 +23,10 @@
       family = LAGRANGE
   []
   [disp_y]
+    order = FIRST
+      family = LAGRANGE
+  []
+  [disp_z]
     order = FIRST
       family = LAGRANGE
   []
@@ -51,6 +58,11 @@
     family = MONOMIAL
   [../]
 
+  [./fp_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
   [./e_xy]
     order = CONSTANT
     family = MONOMIAL
@@ -61,12 +73,46 @@
     family = MONOMIAL
   []
 
+  [stress_xx]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_yy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_xy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
 []
 
 [Functions]
   [disp_load]
     type = ParsedFunction
     value = '0.01*t'
+  []
+  [top_load]
+    type = ParsedFunction
+    expression = '5.*t'
+  []
+  [right_load]
+    type = PiecewiseLinear
+    x = '0.0 0.1 1.0'
+    y = '0.0 2.63 2.63'
+  []
+  [force]
+    type = PiecewiseLinear
+    x = '0.0 1.0 '
+    y = '0.0 1.0e-4'
   []
 []
 
@@ -83,10 +129,10 @@
 
 [Kernels]
   [./TensorMechanics]
-    displacements = 'disp_x disp_y'
+    displacements = 'disp_x disp_y disp_z'
     use_displaced_mesh = true
     add_variables = true
-    generate_output = 'deformation_gradient_xx deformation_gradient_xy deformation_gradient_yy'
+    generate_output = 'deformation_gradient_xx deformation_gradient_xy deformation_gradient_yy stress_xx stress_yy stress_xy'
   [../]
   [Edeg_Pos_Time_Deri]
     type = MassLumpedTimeDerivative
@@ -146,6 +192,15 @@
     execute_on = timestep_end
   [../]
 
+  [./fp_zz]
+    type = RankTwoAux
+    variable = fp_zz
+    rank_two_tensor = fp
+    index_j = 2
+    index_i = 2
+    execute_on = timestep_end
+  [../]
+
   [./e_xy]
     type = RankTwoAux
     variable = e_xy
@@ -162,6 +217,35 @@
     index = 0
     execute_on = timestep_end
   []
+
+  [./stress_xx]
+    type = RankTwoAux
+    variable = stress_xx
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 0
+  [../]
+  [./stress_yy]
+    type = RankTwoAux
+    variable = stress_yy
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  [../]
+  [./stress_zz]
+    type = RankTwoAux
+    variable = stress_zz
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+  [./stress_xy]
+    type = RankTwoAux
+    variable = stress_xy
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 1
+  [../]
 
 []
 
@@ -189,7 +273,7 @@
   [./strain]
     type = ComputeFiniteStrain
     block = 0
-    displacements = 'disp_x disp_y'
+    displacements = 'disp_x disp_y disp_z'
   [../]
 []
 
@@ -206,11 +290,11 @@
     boundary = 'bottom'
     value = 0.0
   []
-  [top_x]
-    type = FunctionDirichletBC
-    variable = disp_x
-    boundary = 'top'
-    function = disp_load
+  [bottom_z]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 'bottom'
+    value = 0.0
   []
   [top_y]
     type = DirichletBC
@@ -218,25 +302,22 @@
     boundary = 'top'
     value = 0.0 
   []
+  [top_z]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 'top'
+    value = 0.0 
+  []
+[]
 
-  [./Periodic]
-
-    [./auto_rho_edge_pos_boundary_x]
-      variable = rho_edge_pos_1
-      primary = 'left'
-    secondary = 'right'
-    translation = '0.1 0.0 0.0'
-    [../]
-
-    [./auto_rho_edge_neg_boundary_x]
-      variable = rho_edge_neg_1
-      primary = 'left'
-    secondary = 'right'
-    translation = '0.1 0.0 0.0'
-    [../]
-
-  [../]
-
+[NodalKernels]
+  [force_x]
+    type = NodalGravity
+    variable = disp_x
+    boundary = 'top'
+    gravity_value = 1.0
+    mass = 0.6575
+  []
 []
 
 [Preconditioning]
@@ -254,7 +335,7 @@
   solve_type = 'PJFNK'
   petsc_options = '-snes_ksp_ew'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
-  petsc_options_value = 'hypre    boomeramg          31'
+  petsc_options_value = 'lu    boomeramg          31'
   line_search = 'none'
   l_max_its = 50
   nl_max_its = 50
@@ -263,8 +344,8 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 1.e-4 #0.01
-  dt = 1.e-4
+  end_time = 0.75 #0.01
+  dt = 2.e-6
   dtmin = 1.e-9
 []
 
@@ -272,24 +353,23 @@
   [rhoep]
     type = LineValueSampler
     variable = rho_edge_pos_1
-    start_point = '0 0.005 0'
-    end_point = '0.1 0.005 0'
-    num_points = 6
+    start_point = '0 0.001 0.001'
+    end_point = '0.1 0.001 0.001'
+    num_points = 21
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
     variable = rho_edge_neg_1
-    start_point = '0 0.005 0'
-    end_point = '0.1 0.005 0'
-    num_points = 6
+    start_point = '0 0.001 0.001'
+    end_point = '0.1 0.001 0.001'
+    num_points = 21
     sort_by = x
   []
 []
 
 [Outputs]
   exodus = true
-  interval = 10
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1

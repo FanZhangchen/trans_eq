@@ -5,12 +5,12 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 1
+  nx = 50
   ny = 1
   xmin = 0.0
   ymin = 0.0
   xmax = 0.1
-  ymax = 0.1  
+  ymax = 0.002  
   displacements = 'disp_x disp_y'
 []
 
@@ -57,6 +57,46 @@
   [../]
 
   [slip_rate]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_xx]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_yy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [stress_xy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [strain_xx]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [strain_yy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [strain_zz]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [strain_xy]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -163,6 +203,64 @@
     execute_on = timestep_end
   []
 
+  [./stress_xx]
+    type = RankTwoAux
+    variable = stress_xx
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 0
+  [../]
+  [./stress_yy]
+    type = RankTwoAux
+    variable = stress_yy
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  [../]
+  [./stress_zz]
+    type = RankTwoAux
+    variable = stress_zz
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+  [./stress_xy]
+    type = RankTwoAux
+    variable = stress_xy
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 1
+  [../]
+
+  [./strain_xx]
+    type = RankTwoAux
+    variable = strain_xx
+    rank_two_tensor = strain
+    index_i = 0
+    index_j = 0
+  [../]
+  [./strain_yy]
+    type = RankTwoAux
+    variable = strain_yy
+    rank_two_tensor = strain
+    index_i = 1
+    index_j = 1
+  [../]
+  [./strain_zz]
+    type = RankTwoAux
+    variable = strain_zz
+    rank_two_tensor = strain
+    index_i = 2
+    index_j = 2
+  [../]
+  [./strain_xy]
+    type = RankTwoAux
+    variable = strain_xy
+    rank_two_tensor = strain
+    index_i = 0
+    index_j = 1
+  [../]
+
 []
 
 [Materials]
@@ -219,24 +317,6 @@
     value = 0.0 
   []
 
-  [./Periodic]
-
-    [./auto_rho_edge_pos_boundary_x]
-      variable = rho_edge_pos_1
-      primary = 'left'
-    secondary = 'right'
-    translation = '0.1 0.0 0.0'
-    [../]
-
-    [./auto_rho_edge_neg_boundary_x]
-      variable = rho_edge_neg_1
-      primary = 'left'
-    secondary = 'right'
-    translation = '0.1 0.0 0.0'
-    [../]
-
-  [../]
-
 []
 
 [Preconditioning]
@@ -254,7 +334,7 @@
   solve_type = 'PJFNK'
   petsc_options = '-snes_ksp_ew'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
-  petsc_options_value = 'hypre    boomeramg          31'
+  petsc_options_value = 'lu    boomeramg          31'
   line_search = 'none'
   l_max_its = 50
   nl_max_its = 50
@@ -263,8 +343,8 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 1.e-4 #0.01
-  dt = 1.e-4
+  end_time = 1.e-3 #0.01
+  dt = 1.e-6
   dtmin = 1.e-9
 []
 
@@ -272,17 +352,17 @@
   [rhoep]
     type = LineValueSampler
     variable = rho_edge_pos_1
-    start_point = '0 0.005 0'
-    end_point = '0.1 0.005 0'
-    num_points = 6
+    start_point = '0 0.001 0'
+    end_point = '0.1 0.001 0'
+    num_points = 21
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
     variable = rho_edge_neg_1
-    start_point = '0 0.005 0'
-    end_point = '0.1 0.005 0'
-    num_points = 6
+    start_point = '0 0.001 0'
+    end_point = '0.1 0.001 0'
+    num_points = 21
     sort_by = x
   []
 []

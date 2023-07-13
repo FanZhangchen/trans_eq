@@ -116,7 +116,7 @@ protected:
   const Real _dCRSS_dT_C;
   const Real _dislo_mobility;
   const Real _reduced_mobility;
-  
+
   const Real _shear_modulus_hardening;
   const Real _dislo_max_velocity;
 
@@ -172,7 +172,7 @@ protected:
   // Slip increment for output
   MaterialProperty<std::vector<Real>> & _slip_incr_out;
 
-    // slip rate for output
+  // slip rate for output
   MaterialProperty<std::vector<Real>> & _slip_rate_out;
 
   // Dislocation velocity

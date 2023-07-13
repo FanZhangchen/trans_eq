@@ -93,7 +93,7 @@ ConservativeAdvectionSchmid::negSpeedQp()
     // _velocity *= edge_sign; // positive or negative dislocation
   }
 
-  return -_grad_test[_i][_qp] * RealVectorValue( 0.0, _velocity[0], 0.0);
+  return -_grad_test[_i][_qp] * RealVectorValue(_velocity[0], 0.0, 0.0);
 }
 
 Real

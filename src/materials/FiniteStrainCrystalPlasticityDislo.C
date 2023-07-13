@@ -161,21 +161,27 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   iden.zero();
   iden.addIa(1.0);
 
-  mooseWarning("_fp[_qp]", _fp[_qp]);
-  mooseWarning("_fp_old[_qp]", _fp_old[_qp]);
+  // mooseWarning("_pk2_old", _pk2_old[_qp]);
+  // mooseWarning("_fp[_qp]", _fp[_qp]);
+  // mooseWarning("_fp_old[_qp]", _fp_old[_qp]);
 
   _fe = _dfgrd_tmp * _fp_prev_inv; // _fp_inv  ==> _fp_prev_inv
   ce = _fe.transpose() * _fe;
   ce_pk2 = ce * _pk2_tmp;
   ce_pk2 = ce_pk2 / _fe.det();
 
-  mooseWarning("_dfgrd_tmp", _dfgrd_tmp);
-  mooseWarning("_fp_prev_inv", _fp_prev_inv);
-  mooseWarning("_fe", _fe);
-  mooseWarning("ce", ce);
-  mooseWarning("_pk2_tmp", _pk2_tmp);
-  mooseWarning("_fe.det()", _fe.det());
-  mooseWarning("ce_pk2", ce_pk2);
+  // if(_qp == 0) 
+  // {
+  //   mooseWarning("_qp", _qp);
+  //   mooseWarning("_dfgrd_tmp", _dfgrd_tmp);
+  //   mooseWarning("_fp_prev_inv", _fp_prev_inv);
+  //   mooseWarning("_fe", _fe);
+  //   mooseWarning("ce", ce);
+  //   mooseWarning("_pk2_tmp", _pk2_tmp);
+  //   mooseWarning("_fe.det()", _fe.det());
+  //   mooseWarning("ce_pk2", ce_pk2);
+  // }
+  
 
   // Calculate Schmid tensor and resolved shear stresses
   for (unsigned int i = 0; i < _nss; ++i)
@@ -196,6 +202,7 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   // depends on slip rate, changing at each iteration
   // of the CP algorithm
   getSlipIncrements(); // Calculate slip rate,dslip,dslipdtau
+  // mooseWarning("_slip_incr(0) ", _slip_incr(0));
 
   // calculate dislocation velocity
   // and store it for advection kernel
@@ -208,18 +215,23 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   for (unsigned int i = 0; i < _nss; ++i)
   {
     eqv_slip_incr += _s0[i] * _slip_incr(i);
-    mooseWarning("_s0[i]", _s0[i]);
-    mooseWarning("_slip_incr(i)", _slip_incr(i));
+    // if(_qp == 0)
+    //   {
+    //     mooseWarning("_s0[i] ", _s0[i]);
+    //     // mooseWarning("_slip_incr(i) ", _slip_incr(i));
+    //   }
   }
-
-
 
   eqv_slip_incr = iden - eqv_slip_incr;
   _fp_inv = _fp_old_inv * eqv_slip_incr;
 
-  mooseWarning("_fp_inv", _fp_inv);
-  mooseWarning("_fp_old_inv", _fp_old_inv);
-  mooseWarning("eqv_slip_incr", eqv_slip_incr);
+  // if(_qp == 0)
+  // {
+  //   mooseWarning("_fp_inv", _fp_inv);
+  //   mooseWarning("_fp_old_inv", _fp_old_inv);
+  //   mooseWarning("eqv_slip_incr", eqv_slip_incr);
+  // }
+  
 
   _fe = _dfgrd_tmp * _fp_inv;
 
@@ -232,8 +244,8 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   //     (std::exp((2.0 / 3.0) * thermal_expansion * (temp - reference_temperature)) - 1.0) * iden;
   pk2_new = _elasticity_tensor[_qp] * ee;
 
-  mooseWarning("ee", ee);
-  mooseWarning("pk2_new", pk2_new);
+  // mooseWarning("ee", ee);
+  // mooseWarning("pk2_new", pk2_new);
 
   resid = _pk2_tmp - pk2_new;
 
@@ -271,6 +283,8 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   std::vector<Real> rho_edge_neg_grad(_nss);
 
   Real RhoTotSlip; // total dislocation density in the current slip system
+
+  Real _tau_judge;
 
   // Assign dislocation density vectors
   rho_edge_pos[0] = _rho_edge_pos_1[_qp];
@@ -313,51 +327,62 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
     RhoTotSlip = rho_edge_pos[i] + rho_edge_neg[i]; // + rho_screw_pos[i] + rho_screw_neg[i];
 
     // calculate the backstress term
-    _tau_backstress(i) = _burgers_vector_mag * _mu *
-                 (rho_edge_pos_grad[i] - rho_edge_neg_grad[i]) / RhoTotSlip;
+    _tau_backstress(i) =
+        _burgers_vector_mag * _mu * (rho_edge_pos_grad[i] - rho_edge_neg_grad[i]) / RhoTotSlip;
+    // mooseWarning("_tau_backstress(i) ", _tau_backstress(i));
 
     if (RhoTotSlip > 0.0)
     {
 
-      if (std::abs(_tau(i) - _tau_backstress(i)) > _gssT[i])
+      _tau_judge = std::abs(_tau(i) - _tau_backstress(i));
+
+      if ( _tau_judge > _gssT[i])
       {
-        _slip_rate(i) = _gamma0dot *
-                              std::exp(-_F0 / _boltzmann / _abstemp *
-                                       std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
-                                                                _gssT[i]) / _tau0hat),
-                                                              _p)),
-                                                _q)) *
-                              std::copysign(1.0, (_tau(i) - _tau_backstress(i)));
+        _slip_rate(i) =
+            _gamma0dot *
+            std::exp(-_F0 / _boltzmann / _abstemp *
+                     std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) /
+                                               _tau0hat),
+                                              _p)),
+                              _q)) *
+            std::copysign(1.0, (_tau(i) - _tau_backstress(i)));
+            // mooseWarning("_gssT[i] ", _gssT[i]);
+            // mooseWarning("_slip_rate(i)11111 ", _slip_rate(i));
       }
       else
       {
         _slip_rate(i) = 0.0;
+        // mooseWarning("_slip_rate(i)22222 ", _slip_rate(i));
       }
 
-            _slip_incr(i) = _slip_rate(i) * _dt;
-      
-            // mooseWarning("slip resistance ", _gssT[i]);
-            mooseWarning("tau ", _tau(i));
-            // mooseWarning("The slip rate value is ", _slip_rate(i));
-      
-            // Derivative is always positive
-            _dslipdtau(i) =
+      // mooseWarning("_dt11111 ", _dt);
+      _slip_incr(i) = _slip_rate(i) * _dt;
+      // mooseWarning("_slip_incr(i)11111 ", _slip_incr(i));
+
+      // mooseWarning("slip resistance ", _gssT[i]);
+      // mooseWarning("tau ", _tau(i));
+      // mooseWarning("The slip rate value is ", _slip_rate(i));
+
+      // Derivative is always positive
+      if (_tau_judge > _gssT[i])
+      {
+        _dslipdtau(i) =
                 _gamma0dot * _p * _q * _F0 / _boltzmann / _abstemp *
-                std::exp(
-                    -_F0 / _boltzmann / _abstemp *
-                    std::pow(
-                        (1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
-                                        _gssT[i]) / _tau0hat),
-                                      _p)),
-                        _q)) *
-                std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
-                                         _gssT[i]) / _tau0hat),
-                                       _p)),
+                std::exp(-_F0 / _boltzmann / _abstemp *
+                         std::pow((1.0 - std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) /
+                                                   _tau0hat),
+                                                  _p)),
+                                  _q)) *
+                std::pow((1.0 -
+                          std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p)),
                          _q - 1.0) *
-                std::pow(((std::abs(_tau(i) - _tau_backstress(i)) -
-                           _gssT[i]) / _tau0hat),
-                         _p - 1.0) *
+                std::pow(((std::abs(_tau(i) - _tau_backstress(i)) - _gssT[i]) / _tau0hat), _p - 1.0) *
                 std::copysign(1.0, (_tau(i) - _tau_backstress(i))) * _dt;
+      }
+      else
+      {
+        _dslipdtau(i) = 0.0;
+      }
     }
     else
     {
@@ -375,6 +400,8 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
       //_err_tol = true;
       mooseWarning("Maximum allowable slip increment exceeded ", std::abs(_slip_incr(i)));
       _slip_incr(i) = _slip_incr_tol * std::copysign(1.0, _tau(i));
+      _dslipdtau(i) = 0.0;
+      // mooseWarning("_slip_incr(0)22222 ", _slip_incr(i));
     }
   }
 

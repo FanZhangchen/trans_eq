@@ -23,7 +23,8 @@ GrainPropertyReadFile::validParams()
       "read_type",
       MooseEnum("element grain indexgrain"),
       "Type of property distribution: element:element by element property "
-      "variation; grain:voronoi grain structure; indexgrain: grain index in GMSH as physical volume");
+      "variation; grain:voronoi grain structure; indexgrain: grain index in GMSH as physical "
+      "volume");
   params.addParam<unsigned int>("rand_seed", 2000, "random seed");
   params.addParam<MooseEnum>(
       "rve_type",
@@ -65,13 +66,13 @@ GrainPropertyReadFile::GrainPropertyReadFile(const InputParameters & parameters)
     case 1:
       readGrainData();
       break;
-	  
-	// if reading grains from physical volumes of GMSH file
-	// the data structure built from Euler angles input file is the same
-	// as in the case of MOOSE Voronoi generation
-	case 2:
+
+    // if reading grains from physical volumes of GMSH file
+    // the data structure built from Euler angles input file is the same
+    // as in the case of MOOSE Voronoi generation
+    case 2:
       readGrainData();
-      break;	
+      break;
   }
 }
 
@@ -110,7 +111,6 @@ GrainPropertyReadFile::readGrainData()
 
   file_prop.close();
   initGrainCenterPoints();
-
 }
 
 void
@@ -126,7 +126,7 @@ GrainPropertyReadFile::initGrainCenterPoints()
 Real
 GrainPropertyReadFile::getData(const Elem * elem, unsigned int prop_num) const
 {
-  
+
   switch (_read_type)
   {
     case 0:
@@ -134,9 +134,9 @@ GrainPropertyReadFile::getData(const Elem * elem, unsigned int prop_num) const
 
     case 1:
       return getGrainData(elem, prop_num);
-	  
-	case 2:
-	  return getIndexGrainData(elem, prop_num);
+
+    case 2:
+      return getIndexGrainData(elem, prop_num);
   }
   mooseError("Error ElementPropertyReadFile: Provide valid read type");
 }
@@ -159,8 +159,7 @@ GrainPropertyReadFile::getGrainData(const Elem * elem, unsigned int prop_num) co
 {
   mooseAssert(prop_num < _nprop,
               "Error ElementPropertyReadFile: Property number "
-                  << prop_num << " greater than total number of properties " << _nprop
-                  << "\n");
+                  << prop_num << " greater than total number of properties " << _nprop << "\n");
 
   Point centroid = elem->centroid();
   Real min_dist = _max_range;
@@ -197,24 +196,24 @@ GrainPropertyReadFile::getGrainData(const Elem * elem, unsigned int prop_num) co
 Real
 GrainPropertyReadFile::getIndexGrainData(const Elem * elem, unsigned int prop_num) const
 {
-  
+
   mooseAssert(prop_num < _nprop,
               "Error ElementPropertyReadFile: Property number "
-                  << prop_num << " greater than total number of properties " << _nprop
-                  << "\n");
+                  << prop_num << " greater than total number of properties " << _nprop << "\n");
 
   // Get grain index of this element
   unsigned int igrain = elem->subdomain_id();
-  
+
   // If elements are generated with GeneratedMesh
   // then igrain will be zero
-  if (igrain == 0) {
-	  igrain = 1;
+  if (igrain == 0)
+  {
+    igrain = 1;
   }
 
   // Grain index starts from 1 to ngrain
   // but _data vector starts from 0
-  return _data[(igrain-1) * _nprop + prop_num];
+  return _data[(igrain - 1) * _nprop + prop_num];
 }
 
 // TODO: this should probably use the built-in min periodic distance!

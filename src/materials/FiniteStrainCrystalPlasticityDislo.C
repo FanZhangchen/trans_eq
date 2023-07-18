@@ -146,7 +146,11 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
 
     _tau_backstress(_nss),
 
-    _slip_rate(_nss)
+    _slip_rate(_nss),
+
+    _slip_accum_out(declareProperty<Real>("slip_accum")),
+
+    _slip_accum_out_old(getMaterialPropertyOld<Real>("slip_accum"))
 {
 }
 
@@ -414,6 +418,8 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
     _slip_rate_out[_qp][i] = _slip_rate(i);
 
     _slip_incr_out[_qp][i] = _slip_incr(i);
+
+    _acc_slip[_qp] = std::abs(_slip_incr(i)) + _acc_slip_old[_qp];
   }
 }
 

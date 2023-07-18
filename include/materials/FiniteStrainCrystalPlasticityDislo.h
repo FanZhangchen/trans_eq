@@ -175,6 +175,11 @@ protected:
   // slip rate for output
   MaterialProperty<std::vector<Real>> & _slip_rate_out;
 
+  // Slip increment for output
+  MaterialProperty<Real> & _slip_accum_out;
+
+  const MaterialProperty<Real> & _slip_accum_out_old;
+
   // Dislocation velocity
   MaterialProperty<std::vector<Real>> & _dislo_velocity;
 

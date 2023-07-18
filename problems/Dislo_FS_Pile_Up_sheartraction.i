@@ -4,14 +4,17 @@
 
 [Mesh]
   type = GeneratedMesh
-  dim = 2
-  nx = 50
+  dim = 3
+  nx = 1
   ny = 1
+  nz = 1
   xmin = 0.0
   ymin = 0.0
-  xmax = 0.1
-  ymax = 0.002  
-  displacements = 'disp_x disp_y'
+  zmin = 0.0
+  xmax = 1.0
+  ymax = 1.0
+  zmax = 1.0
+  displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
@@ -20,6 +23,10 @@
       family = LAGRANGE
   []
   [disp_y]
+    order = FIRST
+      family = LAGRANGE
+  []
+  [disp_z]
     order = FIRST
       family = LAGRANGE
   []
@@ -47,6 +54,11 @@
   [../]
 
   [./fp_yy]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+  [./fp_zz]
     order = CONSTANT
     family = MONOMIAL
   [../]
@@ -81,32 +93,26 @@
     family = MONOMIAL
   []
 
-  [strain_xx]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-
-  [strain_yy]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-
-  [strain_zz]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-
-  [strain_xy]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-
 []
 
 [Functions]
   [disp_load]
     type = ParsedFunction
     value = '0.01*t'
+  []
+  [top_load]
+    type = ParsedFunction
+    expression = '5.*t'
+  []
+  [right_load]
+    type = PiecewiseLinear
+    x = '0.0 0.1 1.0'
+    y = '0.0 2.63 2.63'
+  []
+  [force]
+    type = PiecewiseLinear
+    x = '0.0 1.0 '
+    y = '0.0 1.0e-4'
   []
 []
 
@@ -122,24 +128,30 @@
 []
 
 [Kernels]
+  [./TensorMechanics]
+    displacements = 'disp_x disp_y disp_z'
+    use_displaced_mesh = true
+    add_variables = true
+    generate_output = 'deformation_gradient_xx deformation_gradient_xy deformation_gradient_yy stress_xx stress_yy stress_xy'
+  [../]
   [Edeg_Pos_Time_Deri]
     type = MassLumpedTimeDerivative
-    variable = rhoep
+    variable = rho_edge_pos_1
   []
   [Edge_Pos_Flux]
     type = ConservativeAdvectionSchmid
-    variable = rhoep
+    variable = rho_edge_pos_1
     upwinding_type = full
       dislo_sign = positive
       slip_sys_index = 0
   []
   [Edeg_Neg_Time_Deri]
     type = MassLumpedTimeDerivative
-    variable = rhoen
+    variable = rho_edge_neg_1
   []
   [Edge_Neg_Flux]
     type = ConservativeAdvectionSchmid
-    variable = rhoen
+    variable = rho_edge_neg_1
     upwinding_type = full
       dislo_sign = negative
       slip_sys_index = 0
@@ -151,16 +163,90 @@
     type = TotalDislocationDensity
     variable = rhot
     execute_on = timestep_end
-    rhoep = rhoep
-    rhoen = rhoen
+    rhoep = rho_edge_pos_1
+    rhoen = rho_edge_neg_1
   []
   [rhognd]
     type = GNDDislocationDensity
     variable = rhognd
     execute_on = timestep_end
-    rhoep = rhoep
-    rhoen = rhoen
+    rhoep = rho_edge_pos_1
+    rhoen = rho_edge_neg_1
   []
+
+  [./fp_xx]
+    type = RankTwoAux
+    variable = fp_xx
+    rank_two_tensor = fp
+    index_j = 0
+    index_i = 0
+    execute_on = timestep_end
+  [../]
+
+ [./fp_yy]
+    type = RankTwoAux
+    variable = fp_yy
+    rank_two_tensor = fp
+    index_j = 1
+    index_i = 1
+    execute_on = timestep_end
+  [../]
+
+  [./fp_zz]
+    type = RankTwoAux
+    variable = fp_zz
+    rank_two_tensor = fp
+    index_j = 2
+    index_i = 2
+    execute_on = timestep_end
+  [../]
+
+  [./e_xy]
+    type = RankTwoAux
+    variable = e_xy
+    rank_two_tensor = lage
+    index_j = 1
+    index_i = 0
+    execute_on = timestep_end
+  [../]
+
+  [slip_rate]
+    type = MaterialStdVectorAux
+    variable = slip_rate
+    property = slip_rate
+    index = 0
+    execute_on = timestep_end
+  []
+
+  [./stress_xx]
+    type = RankTwoAux
+    variable = stress_xx
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 0
+  [../]
+  [./stress_yy]
+    type = RankTwoAux
+    variable = stress_yy
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+  [../]
+  [./stress_zz]
+    type = RankTwoAux
+    variable = stress_zz
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+  [../]
+  [./stress_xy]
+    type = RankTwoAux
+    variable = stress_xy
+    rank_two_tensor = stress
+    index_i = 0
+    index_j = 1
+  [../]
+
 []
 
 [Materials]
@@ -187,10 +273,9 @@
   [./strain]
     type = ComputeFiniteStrain
     block = 0
-    displacements = 'disp_x disp_y'
+    displacements = 'disp_x disp_y disp_z'
   [../]
 []
-
 
 [BCs]
   [bottom_x]
@@ -205,20 +290,48 @@
     boundary = 'bottom'
     value = 0.0
   []
-  [top_x]
-    type = FunctionDirichletBC
-    variable = disp_x
-    boundary = 'top'
-    function = disp_load
+  [bottom_z]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 'bottom'
+    value = 0.0
   []
+  [top_shear_stress]
+    type = ShearTraction
+    variable = disp_x
+    boundary = top
+    factor = 25.
+  []
+  [top_y]
+    type = DirichletBC
+    variable = disp_y
+    boundary = 'top'
+    value = 0.0 
+  []
+  [top_z]
+    type = DirichletBC
+    variable = disp_z
+    boundary = 'top'
+    value = 0.0 
+  []
+[]
+
+[Preconditioning]
+  active = 'smp'
+  [./smp]
+    type = SMP
+    full = true
+  [../]
 []
 
 # Transient (time-dependent) details for simulations go here:
 [Executioner]
-  type = Transient   # Here we use the Transient Executioner (instead of steady)
+
+  type = Transient
   solve_type = 'PJFNK'
+  petsc_options = '-snes_ksp_ew'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
-  petsc_options_value = 'hypre boomeramg          31'
+  petsc_options_value = 'lu    boomeramg          31'
   line_search = 'none'
   l_max_its = 50
   nl_max_its = 50
@@ -227,33 +340,32 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 0.002
-  dt = 5.e-7
+  end_time = 0.75 #0.01
+  dt = 2.e-6
   dtmin = 1.e-9
 []
 
 [VectorPostprocessors]
   [rhoep]
     type = LineValueSampler
-    variable = rhoep
-    start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 11
+    variable = rho_edge_pos_1
+    start_point = '0 0.001 0.001'
+    end_point = '0.1 0.001 0.001'
+    num_points = 21
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
-    variable = rhoen
-    start_point = '0 0.005 0'
-    end_point = '0.01 0.005 0'
-    num_points = 11
+    variable = rho_edge_neg_1
+    start_point = '0 0.001 0.001'
+    end_point = '0.1 0.001 0.001'
+    num_points = 21
     sort_by = x
   []
 []
 
 [Outputs]
   exodus = true
-  interval = 10
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1

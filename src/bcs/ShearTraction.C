@@ -139,7 +139,8 @@ ShearTraction::computeStiffness(const unsigned int coupled_component)
 }
 
 Real
-ShearTraction::computeFaceStiffness(const unsigned int local_j, const unsigned int coupled_component)
+ShearTraction::computeFaceStiffness(const unsigned int local_j,
+                                    const unsigned int coupled_component)
 {
   //
   // Note that this approach will break down for shell elements, i.e.,
@@ -157,11 +158,9 @@ ShearTraction::computeFaceStiffness(const unsigned int local_j, const unsigned i
   // RealGradient b(dqdxi(1) * dqdeta(2) - dqdxi(2) * dqdeta(1),
   //               dqdxi(2) * dqdeta(0) - dqdxi(0) * dqdeta(2),
   //               dqdxi(0) * dqdeta(1) - dqdxi(1) * dqdeta(0));
-  RealGradient b(dqdxi(0),
-                 dqdxi(1),
-                 dqdxi(2));
-  //const Real inv_length = 1. / (b * _tangents[_qp][0]);
-  const Real inv_length = 1. ;
+  RealGradient b(dqdxi(0), dqdxi(1), dqdxi(2));
+  // const Real inv_length = 1. / (b * _tangents[_qp][0]);
+  const Real inv_length = 1.;
 
   const unsigned int i = _component;
   const unsigned int j = coupled_component;
@@ -172,8 +171,8 @@ ShearTraction::computeFaceStiffness(const unsigned int local_j, const unsigned i
   // const unsigned int index[3][3] = {{0, 2, 1}, {2, 1, 0}, {1, 0, 2}};
   const unsigned int index = 2 - (j + (i + 2) % 3) % 3;
 
-  //const Real variation_b = posneg * (phi_deta * dqdxi(index) - phi_dxi * dqdeta(index));
-  // const Real variation_b = posneg * phi_dxi;
+  // const Real variation_b = posneg * (phi_deta * dqdxi(index) - phi_dxi * dqdeta(index));
+  //  const Real variation_b = posneg * phi_dxi;
   const Real variation_b = 0.;
 
   Real rz_term = 0;

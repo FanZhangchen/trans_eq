@@ -1,19 +1,19 @@
 [GlobalParams]
-  displacements = 'disp_x disp_y'
+  displacements = 'disp_x disp_y disp_z'
 []
 
 [Mesh]
   type = GeneratedMesh
   dim = 3
   nx = 10
-  ny = 10
-  nz = 10
+  ny = 1
+  nz = 1
   xmin = 0.0
   ymin = 0.0
   zmin = 0.0
   xmax = 1.0
-  ymax = 1.0
-  zmax = 1.0
+  ymax = 0.1
+  zmax = 0.1
   displacements = 'disp_x disp_y disp_z'
 []
 
@@ -315,9 +315,9 @@
     type = NodalGravity
     variable = disp_x
     boundary = 'top'
-    gravity_value = 1.0
+    gravity_value = 0.1
     function = force
-    mass = 2.174e-2
+    mass = 0.11954
   []
 []
 
@@ -346,7 +346,7 @@
 
   start_time = 0.0
   end_time = 0.5 #0.01
-  dt = 5.e-8
+  dt = 5.e-7
   dtmin = 1.e-12
 []
 
@@ -371,6 +371,7 @@
 
 [Outputs]
   exodus = true
+  interval = 50
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1

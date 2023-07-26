@@ -1,13 +1,14 @@
 [GlobalParams]
   displacements = 'disp_x disp_y'
+  volumetric_locking_correction=true
 []
 
 [Mesh]
   [./gen]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 2
-    ny = 20
+    nx = 4
+    ny = 50
     xmin = 0.0
     ymin = 0.0
     xmax = 0.1
@@ -367,7 +368,7 @@
 
   start_time = 0.0
   end_time = 1.0 #0.01
-  dt = 5.e-6
+  dt = 2.e-6
   dtmin = 1.e-9
 []
 
@@ -392,7 +393,7 @@
 
 [Outputs]
   exodus = true
-  interval = 5
+  interval = 50
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1e-1_BLP

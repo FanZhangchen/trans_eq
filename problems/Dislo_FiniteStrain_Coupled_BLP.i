@@ -10,8 +10,8 @@
     ny = 10
     xmin = 0.0
     ymin = 0.0
-    xmax = 0.1
-    ymax = 1.0
+    xmax = 0.01
+    ymax = 0.1
   []
   [./pin_point]
     type = BoundingBoxNodeSetGenerator
@@ -99,7 +99,12 @@
 [Functions]
   [disp_load]
     type = ParsedFunction
-    value = '0.05*t'
+    value = '0.0005*t'
+  []
+  [disp_p] 
+    type = PiecewiseLinear
+    x = '0 0.1 0.5'
+    y = '0 4.5e-4 4.5e-4'
   []
 []
 
@@ -312,28 +317,28 @@
       variable = disp_x
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.01 0.0 0.0'
     [../]
 
     [./auto_boundary_y]
       variable = disp_y
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.01 0.0 0.0'
     [../]
 
     [./auto_rho_edge_pos_boundary_x]
       variable = rho_edge_pos_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.01 0.0 0.0'
     [../]
 
     [./auto_rho_edge_neg_boundary_x]
       variable = rho_edge_neg_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.01 0.0 0.0'
     [../]
 
   [../]
@@ -355,17 +360,17 @@
   solve_type = 'PJFNK'
   petsc_options = '-snes_ksp_ew'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
-  petsc_options_value = 'hypre    boomeramg          31'
+  petsc_options_value = 'lu    boomeramg          31'
   line_search = 'none'
   l_max_its = 50
   nl_max_its = 50
-  nl_rel_tol = 1e-7
-  nl_abs_tol = 1e-5
-  l_tol = 1e-8
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-4
+  l_tol = 1e-6
 
   start_time = 0.0
-  end_time = 1.0 #0.01
-  dt = 5.e-6
+  end_time = 0.5 #0.01
+  dt = 5.e-7
   dtmin = 1.e-9
 []
 
@@ -390,7 +395,7 @@
 
 [Outputs]
   exodus = true
-  interval = 5
+  interval = 100
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1e-1_BLP

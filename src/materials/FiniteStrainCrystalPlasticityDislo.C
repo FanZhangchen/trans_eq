@@ -20,6 +20,8 @@ FiniteStrainCrystalPlasticityDislo::validParams()
   // params.addCoupledVar("q_t",0.0,"Curvature density (only one slip system)");
   params.addCoupledVar("rho_edge_pos_1", 0.0, "Positive edge dislocation density: slip system 1");
   params.addCoupledVar("rho_edge_neg_1", 0.0, "Negative edge dislocation density: slip system 1");
+  params.addCoupledVar("rho_edge_pos_2", 0.0, "Positive edge dislocation density: slip system 2");
+  params.addCoupledVar("rho_edge_neg_2", 0.0, "Negative edge dislocation density: slip system 2");
   params.addCoupledVar("rho_forest", 0.0, "Forest dislocation density");
   params.addParam<Real>("thermal_expansion", 0.0, "Thermal expansion coefficient");
   params.addParam<Real>(
@@ -89,6 +91,14 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
     _rho_edge_neg_1(coupledValue("rho_edge_neg_1")),
 
     _grad_rhoen1(coupledGradient("rho_edge_neg_1")), // Coupled rhoen gradient
+
+    _rho_edge_pos_2(coupledValue("rho_edge_pos_2")),
+
+    _grad_rhoep2(coupledGradient("rho_edge_pos_2")), // Coupled rhoep gradient
+
+    _rho_edge_neg_2(coupledValue("rho_edge_neg_2")),
+
+    _grad_rhoen2(coupledGradient("rho_edge_neg_2")), // Coupled rhoen gradient
 
     _thermal_expansion(getParam<Real>("thermal_expansion")),
     _reference_temperature(getParam<Real>("reference_temperature")),
@@ -290,7 +300,7 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
 
   // Assign dislocation density vectors
   rho_edge_pos[0] = _rho_edge_pos_1[_qp];
-  // rho_edge_pos[1] = _rho_edge_pos_2[_qp];
+  rho_edge_pos[1] = _rho_edge_pos_2[_qp];
   // rho_edge_pos[2] = _rho_edge_pos_3[_qp];
   // rho_edge_pos[3] = _rho_edge_pos_4[_qp];
   // rho_edge_pos[4] = _rho_edge_pos_5[_qp];
@@ -303,7 +313,7 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   // rho_edge_pos[11] = _rho_edge_pos_12[_qp];
 
   rho_edge_neg[0] = _rho_edge_neg_1[_qp];
-  // rho_edge_neg[1] = _rho_edge_neg_2[_qp];
+  rho_edge_neg[1] = _rho_edge_neg_2[_qp];
   // rho_edge_neg[2] = _rho_edge_neg_3[_qp];
   // rho_edge_neg[3] = _rho_edge_neg_4[_qp];
   // rho_edge_neg[4] = _rho_edge_neg_5[_qp];
@@ -317,8 +327,10 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
 
   // Assigin dislocation density gradient vectors
   rho_edge_pos_grad[0] = _grad_rhoep1[_qp](1);
+  rho_edge_pos_grad[1] = _grad_rhoep2[_qp](1);
 
   rho_edge_neg_grad[0] = _grad_rhoen1[_qp](1);
+  rho_edge_neg_grad[1] = _grad_rhoen2[_qp](1);
 
   // Positive and negative dislocation give the same
   // contribution to Lp even if their velocity is opposite
@@ -451,7 +463,7 @@ FiniteStrainCrystalPlasticityDislo::getDisloVelocity()
 
   // Assign dislocation density vectors
   rho_edge_pos[0] = _rho_edge_pos_1[_qp];
-  // rho_edge_pos[1] = _rho_edge_pos_2[_qp];
+  rho_edge_pos[1] = _rho_edge_pos_2[_qp];
   // rho_edge_pos[2] = _rho_edge_pos_3[_qp];
   // rho_edge_pos[3] = _rho_edge_pos_4[_qp];
   // rho_edge_pos[4] = _rho_edge_pos_5[_qp];
@@ -464,7 +476,7 @@ FiniteStrainCrystalPlasticityDislo::getDisloVelocity()
   // rho_edge_pos[11] = _rho_edge_pos_12[_qp];
 
   rho_edge_neg[0] = _rho_edge_neg_1[_qp];
-  // rho_edge_neg[1] = _rho_edge_neg_2[_qp];
+  rho_edge_neg[1] = _rho_edge_neg_2[_qp];
   // rho_edge_neg[2] = _rho_edge_neg_3[_qp];
   // rho_edge_neg[3] = _rho_edge_neg_4[_qp];
   // rho_edge_neg[4] = _rho_edge_neg_5[_qp];
@@ -591,8 +603,8 @@ FiniteStrainCrystalPlasticityDislo::OutputSlipDirection()
 void
 FiniteStrainCrystalPlasticityDislo::updateGss()
 {
-  Real sres;           // Taylor hardening + bow-out line tension
-  Real TotalRho = 0.0; // total dislocation density
+  std::vector<Real> sres(_nss);           // Taylor hardening + bow-out line tension
+  std::vector<Real> TotalRho(_nss); // total dislocation density
   // Real rho_forest; // forest dislocation density
 
   // Real q_t = _q_t[_qp]; // curvature density of the active slip system (only 1)
@@ -604,7 +616,7 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
 
   // Assign dislocation density vectors
   rho_edge_pos[0] = _rho_edge_pos_1[_qp];
-  // rho_edge_pos[1] = _rho_edge_pos_2[_qp];
+  rho_edge_pos[1] = _rho_edge_pos_2[_qp];
   // rho_edge_pos[2] = _rho_edge_pos_3[_qp];
   // rho_edge_pos[3] = _rho_edge_pos_4[_qp];
   // rho_edge_pos[4] = _rho_edge_pos_5[_qp];
@@ -617,7 +629,7 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
   // rho_edge_pos[11] = _rho_edge_pos_12[_qp];
 
   rho_edge_neg[0] = _rho_edge_neg_1[_qp];
-  // rho_edge_neg[1] = _rho_edge_neg_2[_qp];
+  rho_edge_neg[1] = _rho_edge_neg_2[_qp];
   // rho_edge_neg[2] = _rho_edge_neg_3[_qp];
   // rho_edge_neg[3] = _rho_edge_neg_4[_qp];
   // rho_edge_neg[4] = _rho_edge_neg_5[_qp];
@@ -638,24 +650,30 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
     _accslip_tmp += std::abs(_slip_incr(i));
 
   for (unsigned int i = 0; i < _nss; ++i)
-    TotalRho += (rho_edge_pos[i] + rho_edge_neg[i]);
+    {
+      for (unsigned int j = 0; j < _nss; ++j)
+      {
+        if (j == i)
+        TotalRho[j] = (rho_edge_pos[i] + rho_edge_neg[i]);
+      }
+    }
 
   // TotalRho += rho_forest;
-
-  if (TotalRho >= 0.0)
-  {
-
-    sres = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho);
-  }
-  else
-  {
-
-    sres = 0.0;
-  }
+  for (unsigned int i = 0; i < _nss; ++i)
+    {
+      if (TotalRho[i] >= 0.0)
+        {
+          sres[i] = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho[i]);
+        }
+        else
+        {
+          sres[i] = 0.0;
+        }
+    }
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _gss_tmp[i] = sres;
+    _gss_tmp[i] = sres[i];
   }
 }
 
@@ -730,7 +748,7 @@ FiniteStrainCrystalPlasticityDislo::getMatRot(const RankTwoTensor & a)
     mooseWarning("Deformation gradient components (2,1)", _deformation_gradient[_qp](2, 1));
     mooseWarning("Deformation gradient components (2,2)", _deformation_gradient[_qp](2, 2));
     mooseWarning("Rho edge pos 1 ", _rho_edge_pos_1[_qp]);
-    // mooseWarning("Rho edge pos 2 ", _rho_edge_pos_2[_qp]);
+    mooseWarning("Rho edge pos 2 ", _rho_edge_pos_2[_qp]);
     // mooseWarning("Rho edge pos 3 ", _rho_edge_pos_3[_qp]);
     // mooseWarning("Rho edge pos 4 ", _rho_edge_pos_4[_qp]);
     // mooseWarning("Rho edge pos 5 ", _rho_edge_pos_5[_qp]);
@@ -742,7 +760,7 @@ FiniteStrainCrystalPlasticityDislo::getMatRot(const RankTwoTensor & a)
     // mooseWarning("Rho edge pos 11 ", _rho_edge_pos_11[_qp]);
     // mooseWarning("Rho edge pos 12 ", _rho_edge_pos_12[_qp]);
     mooseWarning("Rho edge neg 1 ", _rho_edge_neg_1[_qp]);
-    // mooseWarning("Rho edge neg 2 ", _rho_edge_neg_2[_qp]);
+    mooseWarning("Rho edge neg 2 ", _rho_edge_neg_2[_qp]);
     // mooseWarning("Rho edge neg 3 ", _rho_edge_neg_3[_qp]);
     // mooseWarning("Rho edge neg 4 ", _rho_edge_neg_4[_qp]);
     // mooseWarning("Rho edge neg 5 ", _rho_edge_neg_5[_qp]);

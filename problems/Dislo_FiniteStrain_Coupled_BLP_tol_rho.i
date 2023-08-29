@@ -100,7 +100,7 @@
 [Functions]
   [disp_load]
     type = ParsedFunction
-    value = '0.05*t'
+    value = '0.005*t'
   []
 []
 
@@ -290,7 +290,7 @@
     boundary = 'top'
     value = 0.0
   []
-  [rhop_bot]
+  [rhop_bot] 
     type = NeumannBC
     variable = rho_edge_neg_1
     boundary = 'bottom'
@@ -367,8 +367,8 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 1.0 #0.01
-  dt = 5.e-7
+  end_time = 10.0 #0.01
+  dt = 5.e-6
   dtmin = 1.e-9
 []
 

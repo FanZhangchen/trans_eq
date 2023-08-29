@@ -120,7 +120,7 @@
 [Functions]
   [disp_load]
     type = ParsedFunction
-    value = '0.05*t'
+    value = '0.005*t'
   []
 []
 
@@ -417,7 +417,7 @@
   l_tol = 1e-5
 
   start_time = 0.0
-  end_time = 1.0 #0.01
+  end_time = 5.0 #0.01
   dt = 5.e-6
   dtmin = 1.e-9
 []

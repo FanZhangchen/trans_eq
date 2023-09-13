@@ -21,28 +21,26 @@ ConservativeAdvectionSchmid2::validParams()
                              "Type of upwinding used.  None: Typically results in overshoots and "
                              "undershoots, but numerical diffusion is minimized.  Full: Overshoots "
                              "and undershoots are avoided, but numerical diffusion is large");
-  // params.addRequiredParam<int>("slip_sys_index", "Slip system index to determine slip direction "
-  // 						   "for instance from 0 to 11 for FCC.");
+  params.addRequiredParam<int>("slip_sys_index", "Slip system index to determine slip direction "
+  						   "for instance from 0 to 11 for FCC.");
   MooseEnum dislo_sign("positive negative", "positive");
   params.addRequiredParam<MooseEnum>("dislo_sign", dislo_sign, "Sign of dislocations.");
-  // MooseEnum dislo_character("edge screw", "edge");
-  // params.addRequiredParam<MooseEnum>("dislo_character",
-  // dislo_character,
-  // "Character of dislocations: edge or screw.");
+  MooseEnum dislo_character("edge screw", "edge");
+  params.addRequiredParam<MooseEnum>("dislo_character",
+  dislo_character,
+  "Character of dislocations: edge or screw.");
   return params;
 }
 
 ConservativeAdvectionSchmid2::ConservativeAdvectionSchmid2(const InputParameters & parameters)
   : Kernel(parameters),
-    //   _edge_slip_direction(getMaterialProperty<std::vector<Real>>("edge_slip_direction")), //
-    //   Edge velocity direction
-    // _screw_slip_direction(getMaterialProperty<std::vector<Real>>("screw_slip_direction")), //
-    // Screw velocity direction
-    _dislo_velocity(getMaterialProperty<Real>("dislo_velocity")), // Velocity value (signed)
+    // _edge_slip_direction(getMaterialProperty<std::vector<Real>>("edge_slip_direction")), //Edge velocity direction
+    // _screw_slip_direction(getMaterialProperty<std::vector<Real>>("screw_slip_direction")), //Screw velocity direction
+    _dislo_velocity(getMaterialProperty<std::vector<Real>>("dislo_velocity")), // Velocity value (signed)
     _upwinding(getParam<MooseEnum>("upwinding_type").getEnum<UpwindingType>()),
-    // _slip_sys_index(getParam<int>("slip_sys_index")),
+    _slip_sys_index(getParam<int>("slip_sys_index")),
     _dislo_sign(getParam<MooseEnum>("dislo_sign").getEnum<DisloSign>()),
-    // _dislo_character(getParam<MooseEnum>("dislo_character").getEnum<DisloCharacter>()),
+    _dislo_character(getParam<MooseEnum>("dislo_character").getEnum<DisloCharacter>()),
     _u_nodal(_var.dofValues()),
     _upwind_node(0),
     _dtotal_mass_out(0)
@@ -66,32 +64,30 @@ ConservativeAdvectionSchmid2::negSpeedQp()
 
   _velocity.resize(3, 0.0);
 
-  // Find dislocation velocity based on slip systems index and dislocation character
-  // switch (_dislo_character)
-  // {
-  //   case DisloCharacter::edge:
-  //   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
-  //   {
-  //     _velocity[j] = _edge_slip_direction[_qp][_slip_sys_index * LIBMESH_DIM + j]; // edge
-  //     direction
-  //   }
-  //   break;
-  // case DisloCharacter::screw:
-  //   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
-  //   {
-  //     _velocity[j] = _screw_slip_direction[_qp][_slip_sys_index * LIBMESH_DIM + j]; // screw
-  //     direction
-  //   }
-  //   break;
-  // }
-
   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
   {
-    _velocity[j] *= _dislo_velocity[_qp]; // velocity value
+    _velocity[j] = _dislo_velocity[_qp][j]; // velocity value
     _velocity[j] *= edge_sign;            // positive or negative dislocation
   }
 
-  return -_grad_test[_i][_qp] * RealVectorValue(0.0, 0.0, 0.0);
+  // Find dislocation velocity based on slip systems index and dislocation character
+  switch (_dislo_character)
+  {
+    case DisloCharacter::edge:
+    for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
+    {
+      return -_grad_test[_i][_qp] * RealVectorValue(_velocity[j], 0.0, 0.0);
+    }
+    break;
+  case DisloCharacter::screw:
+    for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
+    {
+      _velocity[j] *= 0.5;
+      return -_grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0);
+    }
+    break;
+  }
+  
 }
 
 Real

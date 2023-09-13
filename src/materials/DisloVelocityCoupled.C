@@ -24,6 +24,10 @@ DisloVelocityCoupled::validParams()
 
   params.addRequiredCoupledVar("rhoen", "negative edge dislocation density");
 
+  params.addRequiredCoupledVar("rhosp", "positive screw dislocation density");
+
+  params.addRequiredCoupledVar("rhosn", "negative screw dislocation density");
+
   params.addParam<Real>("boltzmann", 1.38065e-23, "The Boltzmann Constant");
 
   params.addParam<Real>("abstemp", 298, "The absolute temperature");
@@ -78,6 +82,14 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
 
     _grad_rhoen(coupledGradient("rhoen")), // Coupled rhoen gradient
 
+    _rhosp(coupledValue("rhosp")), // Coupled rhosp
+
+    _grad_rhosp(coupledGradient("rhosp")), // Coupled rhosp gradient
+
+    _rhosn(coupledValue("rhosn")), // Coupled rhosn
+
+    _grad_rhosn(coupledGradient("rhosn")), // Coupled rhosn gradient
+
     _boltzmann(getParam<Real>("boltzmann")),
 
     _abstemp(getParam<Real>("abstemp")),
@@ -102,6 +114,10 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
 
     _rho_edge(declareProperty<Real>("rho_edge")),
 
+    _rho_screw(declareProperty<Real>("rho_screw")),
+
+    _rhot(declareProperty<Real>("rhot")),
+
     _tau_backstress(declareProperty<Real>("tau_backstress")),
 
     _slip_rate(declareProperty<Real>("slip_rate"))
@@ -124,15 +140,19 @@ DisloVelocityCoupled::computeQpProperties()
 
   _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
 
+  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+
+  _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
+
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / _rho_edge[_qp];
+      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
       std::exp(
           -_F0 / _boltzmann / _abstemp *
           std::pow((1 - std::pow(((std::abs(_taualpha - _tau_backstress[_qp]) -
-                                   _lambda * _mu * _burgersvector * std::sqrt(_rho_edge[_qp])) /
+                                   _lambda * _mu * _burgersvector * std::sqrt(_rhot[_qp])) /
                                   _tau0hat),
                                  _p)),
                    _q)) *
@@ -140,7 +160,7 @@ DisloVelocityCoupled::computeQpProperties()
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / _rho_edge[_qp];
+    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
   }
 }
 
@@ -159,21 +179,26 @@ DisloVelocityCoupled::initQpStatefulProperties()
 
   _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
 
+  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+
+  _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
+
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) + _grad_rhoen[_qp](0)) / _rho_edge[_qp];
+      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
       std::exp(
           -_F0 / _boltzmann / _abstemp *
           std::pow((1 - std::pow(((std::abs(_taualpha - _tau_backstress[_qp]) -
-                                   _lambda * _mu * _burgersvector * std::sqrt(_rho_edge[_qp])) /
+                                   _lambda * _mu * _burgersvector * std::sqrt(_rhot[_qp])) /
                                   _tau0hat),
                                  _p)),
-                   _q));
+                   _q)) *
+      std::copysign(1.0, (_taualpha - _tau_backstress[_qp]));
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / _rho_edge[_qp];
+    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
   }
 }

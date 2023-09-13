@@ -65,11 +65,23 @@ private:
 
   const VariableGradient & _grad_rhoen;
 
+  const VariableValue & _rhosp;
+
+  const VariableGradient & _grad_rhosp;
+
+  const VariableValue & _rhosn;
+
+  const VariableGradient & _grad_rhosn;
+
   // Real _initial_velocity;
 
   MaterialProperty<Real> & _slip_rate;
 
   MaterialProperty<Real> & _rho_edge;
+
+  MaterialProperty<Real> & _rho_screw;
+
+  MaterialProperty<Real> & _rhot;
 
   MaterialProperty<Real> & _tau_backstress;
 };

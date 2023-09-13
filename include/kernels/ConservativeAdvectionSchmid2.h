@@ -44,19 +44,19 @@ protected:
   // const MaterialProperty<std::vector<Real>> & _screw_slip_direction;
 
   // Dislocation velocity value (signed) on all slip systems
-  const MaterialProperty<Real> & _dislo_velocity;
+  const MaterialProperty<std::vector<Real>> & _dislo_velocity;
 
   /// Type of upwinding
   const enum class UpwindingType { none, full } _upwinding;
 
   // Slip system index to determine slip direction
-  // const unsigned int _slip_sys_index;
+  const unsigned int _slip_sys_index;
 
   // Sign of dislocations
   const enum class DisloSign { positive, negative } _dislo_sign;
 
   // Character of dislocations (edge or screw)
-  // const enum class DisloCharacter { edge, screw } _dislo_character;
+  const enum class DisloCharacter { edge, screw } _dislo_character;
 
   /// Nodal value of u, used for full upwinding
   const VariableValue & _u_nodal;

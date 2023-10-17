@@ -29,8 +29,9 @@ ConservativeRotationEdge2::validParams()
   MooseEnum dislo_character("edge screw", "edge");
   params.addRequiredParam<MooseEnum>(
       "dislo_character", dislo_character, "Character of dislocations: edge or screw.");
-  params.addParam<Real>("scale", 0.5, "Scale parameters");
-  params.addCoupledVar("rho_screw_2", "The variable representing the quandrant 1 edge dislocation density.");
+  params.addParam<Real>("scale", 1.0, "Scale parameters");
+  params.addCoupledVar("rho_screw_2",
+                       "The variable representing the quandrant 1 edge dislocation density.");
   return params;
 }
 
@@ -90,7 +91,9 @@ ConservativeRotationEdge2::negSpeedQp()
 
   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
   {
-    return _rho_screw_2[_qp] * (_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) - _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
+    return _rho_screw_2[_qp] *
+           (- _grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) -
+            _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
   }
 
   // Find dislocation velocity based on slip systems index and dislocation character
@@ -120,7 +123,7 @@ ConservativeRotationEdge2::computeQpResidual()
 {
   // This is the no-upwinded version
   // It gets called via Kernel::computeResidual()
-  return negSpeedQp() * _u[_qp];
+  return negSpeedQp();
 }
 
 Real
@@ -128,7 +131,7 @@ ConservativeRotationEdge2::computeQpJacobian()
 {
   // This is the no-upwinded version
   // It gets called via Kernel::computeJacobian()
-  return negSpeedQp() * _phi[_j][_qp];
+  return 0.0;
 }
 
 void

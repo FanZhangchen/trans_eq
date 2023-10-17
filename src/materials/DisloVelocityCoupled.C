@@ -145,7 +145,9 @@ DisloVelocityCoupled::computeQpProperties()
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)+ _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu *
+      (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0) + _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) /
+      _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -184,7 +186,9 @@ DisloVelocityCoupled::initQpStatefulProperties()
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0) + _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu *
+      (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0) + _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) /
+      _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *

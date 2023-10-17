@@ -82,7 +82,7 @@ ConservativeAdvectionSchmid2::negSpeedQp()
       for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
       {
         _velocity[j] = _dislo_velocity[_qp][j]; // velocity value
-        _velocity[j] *= edge_sign;            // positive or negative dislocation
+        _velocity[j] *= edge_sign;              // positive or negative dislocation
         return -_grad_test[_i][_qp] * RealVectorValue(_velocity[j], 0.0, 0.0);
       }
       break;

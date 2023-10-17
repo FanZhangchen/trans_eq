@@ -62,6 +62,8 @@ DisloVelocityCompleted::validParams()
 
   params.addParam<Real>("taualpha", 2.36, "The resolved shear stress");
 
+  params.addParam<Real>("v_ratio", 1.0, "The ratio of screw velocity");
+
   // params.addParam<std::vector<Real>>("rho_edge", 16000, "The total edge dislocation density");
 
   return params;
@@ -144,7 +146,9 @@ DisloVelocityCompleted::DisloVelocityCompleted(const InputParameters & parameter
 
     _tau_backstress(declareProperty<Real>("tau_backstress")),
 
-    _slip_rate(declareProperty<Real>("slip_rate"))
+    _slip_rate(declareProperty<Real>("slip_rate")),
+
+    _v_ratio(getParam<Real>("v_ratio"))
 
 {
 }
@@ -169,7 +173,10 @@ DisloVelocityCompleted::computeQpProperties()
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) + _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu *
+      (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) +
+       _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) /
+      _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -184,7 +191,7 @@ DisloVelocityCompleted::computeQpProperties()
   for (unsigned int i = 0; i < _nss; ++i)
   {
     _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
+        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + _v_ratio * _rho_screw[_qp]);
   }
 }
 
@@ -208,7 +215,10 @@ DisloVelocityCompleted::initQpStatefulProperties()
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) + _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu *
+      (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) +
+       _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) /
+      _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -223,6 +233,6 @@ DisloVelocityCompleted::initQpStatefulProperties()
   for (unsigned int i = 0; i < _nss; ++i)
   {
     _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
+        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + _v_ratio * _rho_screw[_qp]);
   }
 }

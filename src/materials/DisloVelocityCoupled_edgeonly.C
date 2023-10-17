@@ -159,8 +159,7 @@ DisloVelocityCoupled_edgeonly::computeQpProperties()
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
+    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
   }
 }
 
@@ -198,7 +197,6 @@ DisloVelocityCoupled_edgeonly::initQpStatefulProperties()
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
+    _dislo_velocity[_qp][i] = _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
   }
 }

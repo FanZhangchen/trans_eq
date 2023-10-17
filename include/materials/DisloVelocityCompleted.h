@@ -51,6 +51,8 @@ protected:
 
   const Real _taualpha;
 
+  const Real _v_ratio;
+
 private:
   /// member variable to hold the computed diffusivity coefficient
   MaterialProperty<std::vector<Real>> & _dislo_velocity;

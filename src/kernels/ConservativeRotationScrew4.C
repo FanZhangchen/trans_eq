@@ -29,8 +29,9 @@ ConservativeRotationScrew4::validParams()
   MooseEnum dislo_character("edge screw", "edge");
   params.addRequiredParam<MooseEnum>(
       "dislo_character", dislo_character, "Character of dislocations: edge or screw.");
-  params.addParam<Real>("scale", 0.5, "Scale parameters");
-  params.addCoupledVar("rho_edge_4", "The variable representing the quandrant 1 edge dislocation density.");
+  params.addParam<Real>("scale", 1.0, "Scale parameters");
+  params.addCoupledVar("rho_edge_4",
+                       "The variable representing the quandrant 1 edge dislocation density.");
   return params;
 }
 
@@ -89,9 +90,10 @@ ConservativeRotationScrew4::negSpeedQp()
 
   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
   {
-    return _rho_edge_4[_qp] * (_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) - _grad_test[_i][_qp] * RealVectorValue(_velocity[j], 0.0, 0.0));
+    return _rho_edge_4[_qp] *
+           (_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) +
+            _grad_test[_i][_qp] * RealVectorValue(_velocity[j], 0.0, 0.0));
   }
-
 }
 
 Real
@@ -99,7 +101,7 @@ ConservativeRotationScrew4::computeQpResidual()
 {
   // This is the no-upwinded version
   // It gets called via Kernel::computeResidual()
-  return negSpeedQp() * _u[_qp];
+  return negSpeedQp();
 }
 
 Real
@@ -107,7 +109,7 @@ ConservativeRotationScrew4::computeQpJacobian()
 {
   // This is the no-upwinded version
   // It gets called via Kernel::computeJacobian()
-  return negSpeedQp() * _phi[_j][_qp];
+  return 0.0;
 }
 
 void

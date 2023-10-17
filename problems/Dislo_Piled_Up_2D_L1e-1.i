@@ -13,16 +13,16 @@
 
 [Variables]
   [rhoep]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
   []
   [rhoen]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
   []
   [rhosp]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
   []
   [rhosn]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
   []
 []
 
@@ -140,7 +140,7 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 0.2
+  end_time = 0.35
   dt = 2.e-6
   dtmin = 1.e-9
 []
@@ -182,7 +182,7 @@
 
 [Outputs]
   exodus = true
-  interval = 50
+  interval = 100
   [csv]
     type = CSV
     file_base = rhoe_x_out_l1e-1_2d

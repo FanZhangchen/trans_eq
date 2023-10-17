@@ -6,8 +6,8 @@
     ny = 50
     xmin = 0.0
     ymin = 0.0
-    xmax = 0.1
-    ymax = 0.1    
+    xmax = 0.01
+    ymax = 0.01    
   []
 []
 
@@ -109,7 +109,7 @@
 
   start_time = 0.0
   end_time = 0.2
-  dt = 2.e-6
+  dt = 5.e-7
   dtmin = 1.e-9
 []
 
@@ -117,16 +117,16 @@
   [rhoep]
     type = LineValueSampler
     variable = rhoep
-    start_point = '0 0.05 0'
-    end_point = '0.1 0.05 0'
+    start_point = '0 0.005 0'
+    end_point = '0.01 0.005 0'
     num_points = 41
     sort_by = x
   []
   [rhoen]
     type = LineValueSampler
     variable = rhoen
-    start_point = '0 0.05 0'
-    end_point = '0.1 0.05 0'
+    start_point = '0 0.005 0'
+    end_point = '0.01 0.005 0'
     num_points = 41
     sort_by = x
   []
@@ -134,10 +134,10 @@
 
 [Outputs]
   exodus = true
-  interval = 50
+  interval = 200
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l1e-1
+    file_base = rhoe_x_out_l1e-2
     execute_on = final
   []
 []

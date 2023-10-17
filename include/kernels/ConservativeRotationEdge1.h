@@ -14,12 +14,12 @@
  * Signed edge and screw dislocations are considered
  */
 
-class ConservativeAdvectionSchmid2 : public Kernel
+class ConservativeRotationEdge1 : public Kernel
 {
 public:
   static InputParameters validParams();
 
-  ConservativeAdvectionSchmid2(const InputParameters & parameters);
+  ConservativeRotationEdge1(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual() override;
@@ -29,6 +29,8 @@ protected:
 
   /// advection velocity
   std::vector<Real> _velocity;
+  std::vector<Real> _velocity_edge;
+  std::vector<Real> _velocity_screw;
 
   /// enum to make the code clearer
   enum class JacRes
@@ -46,6 +48,8 @@ protected:
   // Dislocation velocity value (signed) on all slip systems
 
   const Real _scale;
+
+  const VariableValue & _rho_screw_1;
 
   const MaterialProperty<std::vector<Real>> & _dislo_velocity;
 

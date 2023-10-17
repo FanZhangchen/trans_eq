@@ -13,10 +13,16 @@
 
 [Variables]
   [rhoep]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
   []
   [rhoen]
-    initial_condition = 8.e3
+    initial_condition = 4.e3
+  []
+  [rhosp]
+    initial_condition = 4.e3
+  []
+  [rhosn]
+    initial_condition = 4.e3
   []
 []
 
@@ -56,6 +62,32 @@
       dislo_sign = negative
       slip_sys_index = 0
   []
+  [Screw_Pos_Time_Deri]
+    type = MassLumpedTimeDerivative
+    variable = rhosp
+  []
+  [Screw_Pos_Flux]
+    type = ConservativeAdvectionSchmid2
+    variable = rhosp
+    upwinding_type = full
+      dislo_character = screw
+      dislo_sign = positive
+      slip_sys_index = 0
+    scale = 0.5
+  []
+  [Screw_Neg_Time_Deri]
+    type = MassLumpedTimeDerivative
+    variable = rhosn
+  []
+  [Screw_Neg_Flux]
+    type = ConservativeAdvectionSchmid2
+    variable = rhosn
+    upwinding_type = full
+      dislo_character = screw
+      dislo_sign = negative
+      slip_sys_index = 0
+    scale = 0.5
+  []
 []
 
 [AuxKernels]
@@ -77,10 +109,12 @@
 
 [Materials]
   [vel]
-    type = DisloVelocityCoupled_edgeonly
+    type = DisloVelocityCoupled
     nss = 1
     rhoen = rhoen
     rhoep = rhoep
+    rhosn = rhosn
+    rhosp = rhosp
   []
   [mat_bc]
     type = ParsedMaterial
@@ -108,7 +142,7 @@
   l_tol = 1e-8
 
   start_time = 0.0
-  end_time = 0.2
+  end_time = 0.35
   dt = 2.e-6
   dtmin = 1.e-9
 []
@@ -130,14 +164,30 @@
     num_points = 41
     sort_by = x
   []
+  [rhosp]
+    type = LineValueSampler
+    variable = rhosp
+    start_point = '0.05 0 0'
+    end_point = '0.05 0.1 0'
+    num_points = 41
+    sort_by = y
+  []
+  [rhosn]
+    type = LineValueSampler
+    variable = rhosn
+    start_point = '0.05 0 0'
+    end_point = '0.05 0.1 0'
+    num_points = 41
+    sort_by = y
+  []
 []
 
 [Outputs]
   exodus = true
-  interval = 50
+  interval = 100
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l1e-1
+    file_base = rhoe_x_out_l1e-1_2d_scale_2
     execute_on = final
   []
 []

@@ -14,12 +14,12 @@
  * Signed edge and screw dislocations are considered
  */
 
-class ConservativeAdvectionSchmid2 : public Kernel
+class ConservativeRotationScrew2 : public Kernel
 {
 public:
   static InputParameters validParams();
 
-  ConservativeAdvectionSchmid2(const InputParameters & parameters);
+  ConservativeRotationScrew2(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual() override;
@@ -46,6 +46,8 @@ protected:
   // Dislocation velocity value (signed) on all slip systems
 
   const Real _scale;
+
+  const VariableValue & _rho_edge_2;
 
   const MaterialProperty<std::vector<Real>> & _dislo_velocity;
 

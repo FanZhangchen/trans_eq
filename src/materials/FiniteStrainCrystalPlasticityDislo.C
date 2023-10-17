@@ -431,8 +431,10 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
 
     _slip_incr_out[_qp][i] = _slip_incr(i);
 
-    _acc_slip[_qp] = std::abs(_slip_incr(i)) + _acc_slip_old[_qp];
+    _acc_slip[_qp] += std::abs(_slip_incr(i));
   }
+
+  _acc_slip[_qp] = _acc_slip[_qp] + _acc_slip_old[_qp];
 }
 
 // Calculate dislocation velocity (edge and screw) as a function
@@ -603,7 +605,7 @@ FiniteStrainCrystalPlasticityDislo::OutputSlipDirection()
 void
 FiniteStrainCrystalPlasticityDislo::updateGss()
 {
-  std::vector<Real> sres(_nss);           // Taylor hardening + bow-out line tension
+  std::vector<Real> sres(_nss);     // Taylor hardening + bow-out line tension
   std::vector<Real> TotalRho(_nss); // total dislocation density
   // Real rho_forest; // forest dislocation density
 
@@ -650,26 +652,26 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
     _accslip_tmp += std::abs(_slip_incr(i));
 
   for (unsigned int i = 0; i < _nss; ++i)
+  {
+    for (unsigned int j = 0; j < _nss; ++j)
     {
-      for (unsigned int j = 0; j < _nss; ++j)
-      {
-        if (j == i)
+      if (j == i)
         TotalRho[j] = (rho_edge_pos[i] + rho_edge_neg[i]);
-      }
     }
+  }
 
   // TotalRho += rho_forest;
   for (unsigned int i = 0; i < _nss; ++i)
+  {
+    if (TotalRho[i] >= 0.0)
     {
-      if (TotalRho[i] >= 0.0)
-        {
-          sres[i] = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho[i]);
-        }
-        else
-        {
-          sres[i] = 0.0;
-        }
+      sres[i] = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho[i]);
     }
+    else
+    {
+      sres[i] = 0.0;
+    }
+  }
 
   for (unsigned int i = 0; i < _nss; ++i)
   {

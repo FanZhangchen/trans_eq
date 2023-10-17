@@ -2,17 +2,17 @@
 // HITSZ - CMMC
 // May 2023
 
-#include "DisloVelocityCoupled.h"
+#include "DisloVelocityCompleted.h"
 #include "petscblaslapack.h"
 #include "libmesh/utility.h"
 
 #include <fstream>
 #include <cmath>
 
-registerMooseObject("TransEQApp", DisloVelocityCoupled);
+registerMooseObject("TransEQApp", DisloVelocityCompleted);
 
 InputParameters
-DisloVelocityCoupled::validParams()
+DisloVelocityCompleted::validParams()
 {
   InputParameters params = Material::validParams();
 
@@ -20,13 +20,21 @@ DisloVelocityCoupled::validParams()
 
   params.addRequiredParam<int>("nss", "Number of slip systems");
 
-  params.addRequiredCoupledVar("rhoep", "positive edge dislocation density");
+  params.addRequiredCoupledVar("rhoe1", "positive edge dislocation density");
 
-  params.addRequiredCoupledVar("rhoen", "negative edge dislocation density");
+  params.addRequiredCoupledVar("rhoe2", "negative edge dislocation density");
 
-  params.addRequiredCoupledVar("rhosp", "positive screw dislocation density");
+  params.addRequiredCoupledVar("rhoe3", "positive edge dislocation density");
 
-  params.addRequiredCoupledVar("rhosn", "negative screw dislocation density");
+  params.addRequiredCoupledVar("rhoe4", "negative edge dislocation density");
+
+  params.addRequiredCoupledVar("rhos1", "positive screw dislocation density");
+
+  params.addRequiredCoupledVar("rhos2", "negative screw dislocation density");
+
+  params.addRequiredCoupledVar("rhos3", "positive screw dislocation density");
+
+  params.addRequiredCoupledVar("rhos4", "negative screw dislocation density");
 
   params.addParam<Real>("boltzmann", 1.38065e-23, "The Boltzmann Constant");
 
@@ -52,14 +60,14 @@ DisloVelocityCoupled::validParams()
 
   params.addParam<Real>("burgersvector", 0.257e-6, "The Burgers Vector");
 
-  params.addParam<Real>("taualpha", 2.63, "The resolved shear stress");
+  params.addParam<Real>("taualpha", 2.36, "The resolved shear stress");
 
   // params.addParam<std::vector<Real>>("rho_edge", 16000, "The total edge dislocation density");
 
   return params;
 }
 
-DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
+DisloVelocityCompleted::DisloVelocityCompleted(const InputParameters & parameters)
   : DerivativeMaterialInterface<Material>(parameters),
 
     _nss(getParam<int>("nss")),
@@ -74,21 +82,37 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
     _velocity_old(
         getMaterialPropertyOld<std::vector<Real>>("dislo_velocity")), // Dislocation velocity at t-1
 
-    _rhoep(coupledValue("rhoep")), // Coupled rhoep
+    _rhoe1(coupledValue("rhoe1")), // Coupled rhoep
 
-    _grad_rhoep(coupledGradient("rhoep")), // Coupled rhoep gradient
+    _grad_rhoe1(coupledGradient("rhoe1")), // Coupled rhoep gradient
 
-    _rhoen(coupledValue("rhoen")), // Coupled rhoen
+    _rhoe2(coupledValue("rhoe2")), // Coupled rhoen
 
-    _grad_rhoen(coupledGradient("rhoen")), // Coupled rhoen gradient
+    _grad_rhoe2(coupledGradient("rhoe3")), // Coupled rhoen gradient
 
-    _rhosp(coupledValue("rhosp")), // Coupled rhosp
+    _rhoe3(coupledValue("rhoe3")), // Coupled rhoep
 
-    _grad_rhosp(coupledGradient("rhosp")), // Coupled rhosp gradient
+    _grad_rhoe3(coupledGradient("rhoe3")), // Coupled rhoep gradient
 
-    _rhosn(coupledValue("rhosn")), // Coupled rhosn
+    _rhoe4(coupledValue("rhoe4")), // Coupled rhoen
 
-    _grad_rhosn(coupledGradient("rhosn")), // Coupled rhosn gradient
+    _grad_rhoe4(coupledGradient("rhoe4")), // Coupled rhoen gradient
+
+    _rhos1(coupledValue("rhos1")), // Coupled rhosp
+
+    _grad_rhos1(coupledGradient("rhos1")), // Coupled rhosp gradient
+
+    _rhos2(coupledValue("rhos2")), // Coupled rhosn
+
+    _grad_rhos2(coupledGradient("rhos2")), // Coupled rhosn gradient
+
+    _rhos3(coupledValue("rhos3")), // Coupled rhosp
+
+    _grad_rhos3(coupledGradient("rhos3")), // Coupled rhosp gradient
+
+    _rhos4(coupledValue("rhos4")), // Coupled rhosn
+
+    _grad_rhos4(coupledGradient("rhos4")), // Coupled rhosn gradient
 
     _boltzmann(getParam<Real>("boltzmann")),
 
@@ -126,7 +150,7 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
 }
 
 void
-DisloVelocityCoupled::computeQpProperties()
+DisloVelocityCompleted::computeQpProperties()
 {
 
   _dislo_velocity[_qp].resize(_nss);
@@ -138,14 +162,14 @@ DisloVelocityCoupled::computeQpProperties()
 
   // initialize the edge dislocation density
 
-  _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
+  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe1[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
 
-  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+  _rho_screw[_qp] = _rhos1[_qp] + _rhos2[_qp] + _rhos3[_qp] + _rhos4[_qp];
 
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)+ _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu * (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) + _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -165,7 +189,7 @@ DisloVelocityCoupled::computeQpProperties()
 }
 
 void
-DisloVelocityCoupled::initQpStatefulProperties()
+DisloVelocityCompleted::initQpStatefulProperties()
 {
 
   _dislo_velocity[_qp].resize(_nss);
@@ -177,14 +201,14 @@ DisloVelocityCoupled::initQpStatefulProperties()
 
   // initialize the edge dislocation density
 
-  _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
+  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe1[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
 
-  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+  _rho_screw[_qp] = _rhos1[_qp] + _rhos2[_qp] + _rhos3[_qp] + _rhos4[_qp];
 
   _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0) + _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu * (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) + _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *

@@ -2,17 +2,17 @@
 // HITSZ - CMMC
 // May 2023
 
-#include "DisloVelocityCoupled.h"
+#include "DisloVelocityCoupled_edgeonly.h"
 #include "petscblaslapack.h"
 #include "libmesh/utility.h"
 
 #include <fstream>
 #include <cmath>
 
-registerMooseObject("TransEQApp", DisloVelocityCoupled);
+registerMooseObject("TransEQApp", DisloVelocityCoupled_edgeonly);
 
 InputParameters
-DisloVelocityCoupled::validParams()
+DisloVelocityCoupled_edgeonly::validParams()
 {
   InputParameters params = Material::validParams();
 
@@ -24,9 +24,9 @@ DisloVelocityCoupled::validParams()
 
   params.addRequiredCoupledVar("rhoen", "negative edge dislocation density");
 
-  params.addRequiredCoupledVar("rhosp", "positive screw dislocation density");
+  // params.addRequiredCoupledVar("rhosp", "positive screw dislocation density");
 
-  params.addRequiredCoupledVar("rhosn", "negative screw dislocation density");
+  // params.addRequiredCoupledVar("rhosn", "negative screw dislocation density");
 
   params.addParam<Real>("boltzmann", 1.38065e-23, "The Boltzmann Constant");
 
@@ -59,7 +59,7 @@ DisloVelocityCoupled::validParams()
   return params;
 }
 
-DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
+DisloVelocityCoupled_edgeonly::DisloVelocityCoupled_edgeonly(const InputParameters & parameters)
   : DerivativeMaterialInterface<Material>(parameters),
 
     _nss(getParam<int>("nss")),
@@ -82,13 +82,13 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
 
     _grad_rhoen(coupledGradient("rhoen")), // Coupled rhoen gradient
 
-    _rhosp(coupledValue("rhosp")), // Coupled rhosp
+    // _rhosp(coupledValue("rhosp")), // Coupled rhosp
 
-    _grad_rhosp(coupledGradient("rhosp")), // Coupled rhosp gradient
+    // _grad_rhosp(coupledGradient("rhosp")), // Coupled rhosp gradient
 
-    _rhosn(coupledValue("rhosn")), // Coupled rhosn
+    // _rhosn(coupledValue("rhosn")), // Coupled rhosn
 
-    _grad_rhosn(coupledGradient("rhosn")), // Coupled rhosn gradient
+    // _grad_rhosn(coupledGradient("rhosn")), // Coupled rhosn gradient
 
     _boltzmann(getParam<Real>("boltzmann")),
 
@@ -126,7 +126,7 @@ DisloVelocityCoupled::DisloVelocityCoupled(const InputParameters & parameters)
 }
 
 void
-DisloVelocityCoupled::computeQpProperties()
+DisloVelocityCoupled_edgeonly::computeQpProperties()
 {
 
   _dislo_velocity[_qp].resize(_nss);
@@ -140,12 +140,12 @@ DisloVelocityCoupled::computeQpProperties()
 
   _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
 
-  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+  // _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
 
-  _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
+  _rhot[_qp] = _rho_edge[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)+ _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -160,12 +160,12 @@ DisloVelocityCoupled::computeQpProperties()
   for (unsigned int i = 0; i < _nss; ++i)
   {
     _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
+        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
   }
 }
 
 void
-DisloVelocityCoupled::initQpStatefulProperties()
+DisloVelocityCoupled_edgeonly::initQpStatefulProperties()
 {
 
   _dislo_velocity[_qp].resize(_nss);
@@ -179,12 +179,12 @@ DisloVelocityCoupled::initQpStatefulProperties()
 
   _rho_edge[_qp] = _rhoep[_qp] + _rhoen[_qp];
 
-  _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
+  // _rho_screw[_qp] = _rhosp[_qp] + _rhosn[_qp];
 
-  _rhot[_qp] = _rho_edge[_qp] + _rho_screw[_qp];
+  _rhot[_qp] = _rho_edge[_qp];
 
   _tau_backstress[_qp] =
-      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0) + _grad_rhosp[_qp](1) - _grad_rhosn[_qp](1)) / _rhot[_qp];
+      _burgersvector * _mu * (_grad_rhoep[_qp](0) - _grad_rhoen[_qp](0)) / _rhot[_qp];
 
   _slip_rate[_qp] =
       _gamma0dot *
@@ -199,6 +199,6 @@ DisloVelocityCoupled::initQpStatefulProperties()
   for (unsigned int i = 0; i < _nss; ++i)
   {
     _dislo_velocity[_qp][i] =
-        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp] + 0.5 * _rho_screw[_qp]);
+        _slip_rate[_qp] / _burgersvector / (_rho_edge[_qp]);
   }
 }

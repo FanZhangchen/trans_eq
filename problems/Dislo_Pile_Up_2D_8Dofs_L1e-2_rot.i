@@ -2,8 +2,8 @@
   [gen]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 20
-    ny = 20
+    nx = 50
+    ny = 50
     xmin = 0.0
     ymin = 0.0
     xmax = 0.01
@@ -68,7 +68,7 @@
     variable = rhos1
     upwinding_type = full
       dislo_character = screw
-      dislo_sign = positive
+      dislo_sign = negative
       slip_sys_index = 0
   []
   [Screw_Rot_1]
@@ -88,7 +88,7 @@
     variable = rhoe2
     upwinding_type = full
       dislo_character = edge
-      dislo_sign = negative
+      dislo_sign = positive
       slip_sys_index = 0
   []
   [Edge_Rot_2]
@@ -146,7 +146,7 @@
     variable = rhos3
     upwinding_type = full
       dislo_character = screw
-      dislo_sign = negative
+      dislo_sign = positive
       slip_sys_index = 0
   []
   [Screw_Rot_3]
@@ -166,7 +166,7 @@
     variable = rhoe4
     upwinding_type = full
       dislo_character = edge
-      dislo_sign = positive
+      dislo_sign = negative
       slip_sys_index = 0
   []
   [Edge_Rot_4]

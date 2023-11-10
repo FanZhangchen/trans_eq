@@ -160,7 +160,11 @@ FiniteStrainCrystalPlasticityDislo::FiniteStrainCrystalPlasticityDislo(
 
     _slip_accum_out(declareProperty<Real>("slip_accum")),
 
-    _slip_accum_out_old(getMaterialPropertyOld<Real>("slip_accum"))
+    _slip_accum_out_old(getMaterialPropertyOld<Real>("slip_accum")),
+
+    _accumulated_equivalent_plastic_strain(declareProperty<Real>("accumulated_equivalent_plastic_strain")),
+
+    _accumulated_equivalent_plastic_strain_old(getMaterialPropertyOld<Real>("accumulated_equivalent_plastic_strain"))
 {
 }
 
@@ -221,6 +225,8 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   // and store it for advection kernel
   getDisloVelocity();
 
+  GetAccumulatedPlasticStrain();
+
   if (_err_tol)
     return;
 
@@ -228,22 +234,10 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   for (unsigned int i = 0; i < _nss; ++i)
   {
     eqv_slip_incr += _s0[i] * _slip_incr(i);
-    // if(_qp == 0)
-    //   {
-    //     mooseWarning("_s0[i] ", _s0[i]);
-    //     // mooseWarning("_slip_incr(i) ", _slip_incr(i));
-    //   }
   }
 
   eqv_slip_incr = iden - eqv_slip_incr;
   _fp_inv = _fp_old_inv * eqv_slip_incr;
-
-  // if(_qp == 0)
-  // {
-  //   mooseWarning("_fp_inv", _fp_inv);
-  //   mooseWarning("_fp_old_inv", _fp_old_inv);
-  //   mooseWarning("eqv_slip_incr", eqv_slip_incr);
-  // }
 
   _fe = _dfgrd_tmp * _fp_inv;
 
@@ -264,6 +258,24 @@ FiniteStrainCrystalPlasticityDislo::calcResidual(RankTwoTensor & resid)
   // It would be better to call this function in postSolveQp()
   // so it is not called more times than necessary
   OutputSlipDirection();
+}
+
+void
+FiniteStrainCrystalPlasticityDislo::GetAccumulatedPlasticStrain()
+{
+  RankTwoTensor plastic_velocity_gradient;
+
+  plastic_velocity_gradient.zero();
+
+  for (unsigned int i = 0; i < _nss; ++i)
+  {
+    plastic_velocity_gradient = _s0[i] * _slip_rate(i);
+  }
+
+  _accumulated_equivalent_plastic_strain[_qp] = _accumulated_equivalent_plastic_strain_old[_qp]
+
+    + std::sqrt(2.0/3.0 * plastic_velocity_gradient.doubleContraction(plastic_velocity_gradient));
+  
 }
 
 // Critical resolved shear stress decreases exponentially with temperature
@@ -360,16 +372,12 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
                                               _p)),
                               _q)) *
             std::copysign(1.0, (_tau(i) - _tau_backstress(i)));
-        // mooseWarning("_gssT[i] ", _gssT[i]);
-        // mooseWarning("_slip_rate(i)11111 ", _slip_rate(i));
       }
       else
       {
         _slip_rate(i) = 0.0;
-        // mooseWarning("_slip_rate(i)22222 ", _slip_rate(i));
       }
 
-      // mooseWarning("_dt11111 ", _dt);
       _slip_incr(i) = _slip_rate(i) * _dt;
       // mooseWarning("_slip_incr(i)11111 ", _slip_incr(i));
 

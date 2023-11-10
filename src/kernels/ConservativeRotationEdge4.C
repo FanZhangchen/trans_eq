@@ -92,7 +92,7 @@ ConservativeRotationEdge4::negSpeedQp()
   for (unsigned int j = 0; j < LIBMESH_DIM; ++j)
   {
     return _rho_screw_4[_qp] *
-           (-_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) -
+           (_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) +
             _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
   }
 

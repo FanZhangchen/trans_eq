@@ -60,6 +60,8 @@ protected:
    */
   virtual void postSolveQp();
 
+  virtual void GetAccumulatedPlasticStrain();
+
   /**
    * This function perform RU decomposition to obtain the rotation tensor.
    */
@@ -184,6 +186,10 @@ protected:
   MaterialProperty<Real> & _slip_accum_out;
 
   const MaterialProperty<Real> & _slip_accum_out_old;
+
+  MaterialProperty<Real> & _accumulated_equivalent_plastic_strain;
+
+  const MaterialProperty<Real> & _accumulated_equivalent_plastic_strain_old;
 
   // Dislocation velocity
   MaterialProperty<std::vector<Real>> & _dislo_velocity;

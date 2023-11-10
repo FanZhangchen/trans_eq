@@ -32,16 +32,16 @@
       family = LAGRANGE
   []
   [rho_edge_pos_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_pos_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
 []
 
@@ -100,6 +100,11 @@
     family = MONOMIAL
   []
 
+  [accumulated_equivalent_plastic_strain]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+  
 []
 
 [Functions]
@@ -242,6 +247,13 @@
     type = MaterialRealAux
     variable = acc_slip
     property = acc_slip
+    execute_on = timestep_end
+  []
+
+  [acc_strain]
+    type = MaterialRealAux
+    variable = accumulated_equivalent_plastic_strain
+    property = accumulated_equivalent_plastic_strain
     execute_on = timestep_end
   []
 
@@ -442,7 +454,7 @@
   interval = 200
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l22e-2_BLP_rho0_double_60120
+    file_base = rhoe_x_out_l22e-2_BLP_rho0_double_60120_1
     execute_on = final
   []
 []

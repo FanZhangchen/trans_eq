@@ -90,7 +90,7 @@ DisloVelocityCompleted::DisloVelocityCompleted(const InputParameters & parameter
 
     _rhoe2(coupledValue("rhoe2")), // Coupled rhoen
 
-    _grad_rhoe2(coupledGradient("rhoe3")), // Coupled rhoen gradient
+    _grad_rhoe2(coupledGradient("rhoe2")), // Coupled rhoen gradient
 
     _rhoe3(coupledValue("rhoe3")), // Coupled rhoep
 
@@ -166,7 +166,7 @@ DisloVelocityCompleted::computeQpProperties()
 
   // initialize the edge dislocation density
 
-  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe1[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
+  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe2[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
 
   _rho_screw[_qp] = _rhos1[_qp] + _rhos2[_qp] + _rhos3[_qp] + _rhos4[_qp];
 
@@ -174,8 +174,8 @@ DisloVelocityCompleted::computeQpProperties()
 
   _tau_backstress[_qp] =
       _burgersvector * _mu *
-      (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) +
-       _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) /
+      (_grad_rhoe1[_qp](0) + _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) - _grad_rhoe4[_qp](0) -
+       _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) + _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) /
       _rhot[_qp];
 
   _slip_rate[_qp] =
@@ -208,7 +208,7 @@ DisloVelocityCompleted::initQpStatefulProperties()
 
   // initialize the edge dislocation density
 
-  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe1[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
+  _rho_edge[_qp] = _rhoe1[_qp] + _rhoe2[_qp] + _rhoe3[_qp] + _rhoe4[_qp];
 
   _rho_screw[_qp] = _rhos1[_qp] + _rhos2[_qp] + _rhos3[_qp] + _rhos4[_qp];
 
@@ -216,8 +216,8 @@ DisloVelocityCompleted::initQpStatefulProperties()
 
   _tau_backstress[_qp] =
       _burgersvector * _mu *
-      (_grad_rhoe1[_qp](0) - _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) + _grad_rhoe4[_qp](0) +
-       _grad_rhos1[_qp](1) + _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) - _grad_rhos4[_qp](1)) /
+      (_grad_rhoe1[_qp](0) + _grad_rhoe2[_qp](0) - _grad_rhoe3[_qp](0) - _grad_rhoe4[_qp](0) +
+       _grad_rhos1[_qp](1) - _grad_rhos2[_qp](1) - _grad_rhos3[_qp](1) + _grad_rhos4[_qp](1)) /
       _rhot[_qp];
 
   _slip_rate[_qp] =

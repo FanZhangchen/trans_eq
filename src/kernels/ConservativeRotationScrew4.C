@@ -92,7 +92,7 @@ ConservativeRotationScrew4::negSpeedQp()
   {
     return _rho_edge_4[_qp] *
            -(_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) +
-            _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
+             _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
   }
 }
 

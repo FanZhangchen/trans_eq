@@ -93,7 +93,7 @@ ConservativeRotationEdge1::negSpeedQp()
   {
     return _rho_screw_1[_qp] *
            -(_grad_test[_i][_qp] * _scale * RealVectorValue(_velocity[j], 0.0, 0.0) +
-            _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
+             _grad_test[_i][_qp] * RealVectorValue(0.0, _velocity[j], 0.0));
   }
 
   // Find dislocation velocity based on slip systems index and dislocation character

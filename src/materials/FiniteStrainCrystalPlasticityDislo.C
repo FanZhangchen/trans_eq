@@ -54,7 +54,7 @@ FiniteStrainCrystalPlasticityDislo::validParams()
 
   params.addParam<Real>("boltzmann", 1.38065e-23, "The Boltzmann Constant");
 
-  params.addParam<Real>("abstemp", 298, "The absolute temperature");
+  params.addParam<Real>("abstemp", 295.0, "The absolute temperature");
 
   params.addParam<Real>("p", 0.2, "The flow rule parameter p");
 
@@ -279,7 +279,8 @@ FiniteStrainCrystalPlasticityDislo::GetAccumulatedPlasticStrain()
 
   _accumulated_equivalent_plastic_strain[_qp] =
       _accumulated_equivalent_plastic_strain_old[_qp] +
-      std::sqrt(2.0 / 3.0 * plastic_deformation_rate.doubleContraction(plastic_deformation_rate)) * _dt;
+      std::sqrt(2.0 / 3.0 * plastic_deformation_rate.doubleContraction(plastic_deformation_rate)) *
+          _dt;
 }
 
 // Critical resolved shear stress decreases exponentially with temperature
@@ -617,11 +618,10 @@ FiniteStrainCrystalPlasticityDislo::OutputSlipDirection()
 void
 FiniteStrainCrystalPlasticityDislo::updateGss()
 {
-  std::vector<Real> sres(_nss);     // Taylor hardening + bow-out line tension
-  std::vector<Real> TotalRho(_nss); // total dislocation density
-  // Real rho_forest; // forest dislocation density
-
-  // Real q_t = _q_t[_qp]; // curvature density of the active slip system (only 1)
+  Real sres;     // Taylor hardening + bow-out line tension
+  // std::vector<Real> TotalRho(_nss); // total dislocation density
+  
+  Real TotalRho = 0.0; // total dislocation density
 
   std::vector<Real> rho_edge_pos(_nss);
   std::vector<Real> rho_edge_neg(_nss);
@@ -665,29 +665,22 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    for (unsigned int j = 0; j < _nss; ++j)
-    {
-      if (j == i)
-        TotalRho[j] = (rho_edge_pos[i] + rho_edge_neg[i]);
-    }
+    TotalRho += (rho_edge_pos[i] + rho_edge_neg[i]);
   }
-
-  // TotalRho += rho_forest;
-  for (unsigned int i = 0; i < _nss; ++i)
+  
+  if (TotalRho >= 0.0)
   {
-    if (TotalRho[i] >= 0.0)
-    {
-      sres[i] = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho[i]);
-    }
-    else
-    {
-      sres[i] = 0.0;
-    }
+    sres = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho);
   }
+  else
+  {
+    sres = 0.0;
+  }
+  
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _gss_tmp[i] = sres[i];
+    _gss_tmp[i] = sres;
   }
 }
 

@@ -32,16 +32,16 @@
       family = LAGRANGE
   []
   [rho_edge_pos_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_pos_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
 []
 
@@ -96,6 +96,11 @@
   []
 
   [stress_xy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [accumulated_equivalent_plastic_strain]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -245,6 +250,13 @@
     execute_on = timestep_end
   []
 
+  [acc_strain]
+    type = MaterialRealAux
+    variable = accumulated_equivalent_plastic_strain
+    property = accumulated_equivalent_plastic_strain
+    execute_on = timestep_end
+  []
+
   [./stress_xx]
     type = RankTwoAux
     variable = stress_xx
@@ -287,6 +299,7 @@
     p = 0.141
     q = 1.1
     tau0hat = 8.0
+    
 
     slip_sys_file_name = input_slip_sys_al.txt # no need to normalize vectors
     nss = 2 # Number of slip systems

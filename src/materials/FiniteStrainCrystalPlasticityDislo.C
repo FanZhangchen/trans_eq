@@ -271,15 +271,15 @@ FiniteStrainCrystalPlasticityDislo::GetAccumulatedPlasticStrain()
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    plastic_velocity_gradient = _s0[i] * _slip_rate(i);
+    plastic_velocity_gradient += _s0[i] * _slip_rate(i);
   }
 
-  plastic_deformation_rate = 0.5 * (plastic_velocity_gradient + plastic_velocity_gradient.transpose());
+  plastic_deformation_rate =
+      0.5 * (plastic_velocity_gradient + plastic_velocity_gradient.transpose());
 
   _accumulated_equivalent_plastic_strain[_qp] =
-      _accumulated_equivalent_plastic_strain_old[_qp]
-      +
-      std::sqrt(2.0 / 3.0 * plastic_deformation_rate.doubleContraction(plastic_deformation_rate));
+      _accumulated_equivalent_plastic_strain_old[_qp] +
+      std::sqrt(2.0 / 3.0 * plastic_deformation_rate.doubleContraction(plastic_deformation_rate)) * _dt;
 }
 
 // Critical resolved shear stress decreases exponentially with temperature

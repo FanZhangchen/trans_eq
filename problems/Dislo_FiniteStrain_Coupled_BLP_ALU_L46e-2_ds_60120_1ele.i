@@ -173,7 +173,7 @@
     variable = rho_edge_pos_2
     upwinding_type = full
       dislo_sign = positive
-      slip_sys_index = 0
+      slip_sys_index = 1
       dislo_character = edge
   []
 
@@ -186,7 +186,7 @@
     variable = rho_edge_neg_2
     upwinding_type = full
       dislo_sign = negative
-      slip_sys_index = 0
+      slip_sys_index = 1
       dislo_character = edge
   []
 

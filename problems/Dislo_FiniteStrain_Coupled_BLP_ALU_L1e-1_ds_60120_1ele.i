@@ -32,16 +32,16 @@
       family = LAGRANGE
   []
   [rho_edge_pos_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_1]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_pos_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
   [rho_edge_neg_2]
-    initial_condition = 0.5e6
+    initial_condition = 1.e6
   []
 []
 
@@ -96,6 +96,11 @@
   []
 
   [stress_xy]
+    order = CONSTANT
+    family = MONOMIAL
+  []
+
+  [accumulated_equivalent_plastic_strain]
     order = CONSTANT
     family = MONOMIAL
   []
@@ -242,6 +247,13 @@
     type = MaterialRealAux
     variable = acc_slip
     property = acc_slip
+    execute_on = timestep_end
+  []
+
+  [acc_strain]
+    type = MaterialRealAux
+    variable = accumulated_equivalent_plastic_strain
+    property = accumulated_equivalent_plastic_strain
     execute_on = timestep_end
   []
 

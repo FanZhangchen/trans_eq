@@ -6,11 +6,11 @@
   [./gen]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 1
+    nx = 20
     ny = 50
     xmin = 0.0
     ymin = 0.0
-    xmax = 0.022
+    xmax = 0.1
     ymax = 0.22
   []
   [./pin_point]
@@ -359,42 +359,42 @@
       variable = disp_x
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
     [./auto_boundary_y]
       variable = disp_y
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
     [./auto_rho_edge_pos_boundary_x_1]
       variable = rho_edge_pos_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
     [./auto_rho_edge_neg_boundary_x_1]
       variable = rho_edge_neg_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
     [./auto_rho_edge_pos_boundary_x_2]
       variable = rho_edge_pos_2
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
     [./auto_rho_edge_neg_boundary_x_2]
       variable = rho_edge_neg_2
       primary = 'left'
     secondary = 'right'
-    translation = '0.022 0.0 0.0'
+    translation = '0.1 0.0 0.0'
     [../]
 
   [../]
@@ -454,7 +454,7 @@
   interval = 200
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l22e-2_BLP_rho0_double_60120_1
+    file_base = rhoe_x_out_l22e-2_BLP_rho0_double_60120_ratio22
     execute_on = final
   []
 []

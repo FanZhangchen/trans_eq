@@ -6,8 +6,8 @@
   [./gen]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 20
-    ny = 20
+    nx = 10
+    ny = 40
     xmin = 0.0
     ymin = 0.0
     xmax = 0.22

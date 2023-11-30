@@ -308,8 +308,12 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   // std::vector<Real> rho_screw_pos(_nss);
   // std::vector<Real> rho_screw_neg(_nss);
 
-  std::vector<Real> rho_edge_pos_grad(_nss);
-  std::vector<Real> rho_edge_neg_grad(_nss);
+  std::vector<Real> rho_edge_pos_grad_x(_nss);
+  std::vector<Real> rho_edge_neg_grad_x(_nss);
+  std::vector<Real> rho_edge_pos_grad_y(_nss);
+  std::vector<Real> rho_edge_neg_grad_y(_nss);
+  std::vector<Real> rho_edge_pos_grad_z(_nss);
+  std::vector<Real> rho_edge_neg_grad_z(_nss);
 
   Real RhoTotSlip; // total dislocation density in the current slip system
 
@@ -343,11 +347,23 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   // rho_edge_neg[11] = _rho_edge_neg_12[_qp];
 
   // Assigin dislocation density gradient vectors
-  rho_edge_pos_grad[0] = _grad_rhoep1[_qp](1);
-  rho_edge_pos_grad[1] = _grad_rhoep2[_qp](1);
+  rho_edge_pos_grad_x[0] = _grad_rhoep1[_qp](0);
+  rho_edge_pos_grad_x[1] = _grad_rhoep2[_qp](0);
 
-  rho_edge_neg_grad[0] = _grad_rhoen1[_qp](1);
-  rho_edge_neg_grad[1] = _grad_rhoen2[_qp](1);
+  rho_edge_neg_grad_x[0] = _grad_rhoen1[_qp](0);
+  rho_edge_neg_grad_x[1] = _grad_rhoen2[_qp](0);
+
+  rho_edge_pos_grad_y[0] = _grad_rhoep1[_qp](1);
+  rho_edge_pos_grad_y[1] = _grad_rhoep2[_qp](1);
+
+  rho_edge_neg_grad_y[0] = _grad_rhoen1[_qp](1);
+  rho_edge_neg_grad_y[1] = _grad_rhoen2[_qp](1);
+
+  rho_edge_pos_grad_z[0] = _grad_rhoep1[_qp](2);
+  rho_edge_pos_grad_z[1] = _grad_rhoep2[_qp](2);
+
+  rho_edge_neg_grad_z[0] = _grad_rhoen1[_qp](2);
+  rho_edge_neg_grad_z[1] = _grad_rhoen2[_qp](2);
 
   // Positive and negative dislocation give the same
   // contribution to Lp even if their velocity is opposite
@@ -359,7 +375,8 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
 
     // calculate the backstress term
     _tau_backstress(i) =
-        _burgers_vector_mag * _mu * (rho_edge_pos_grad[i] - rho_edge_neg_grad[i]) / RhoTotSlip;
+        _burgers_vector_mag * _mu * (rho_edge_pos_grad_x[i] / std::cos(60.0*3.1415926/180) - rho_edge_neg_grad_x[i] / std::cos(60.0*3.1415926/180) 
+          + rho_edge_pos_grad_y[i] / std::sin(60.0*3.1415926/180) - rho_edge_neg_grad_y[i] / std::sin(60.0*3.1415926/180)) / RhoTotSlip;
     // mooseWarning("_tau_backstress(i) ", _tau_backstress(i));
 
     if (RhoTotSlip > 0.0)

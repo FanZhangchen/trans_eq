@@ -635,10 +635,10 @@ FiniteStrainCrystalPlasticityDislo::OutputSlipDirection()
 void
 FiniteStrainCrystalPlasticityDislo::updateGss()
 {
-  Real sres;     // Taylor hardening + bow-out line tension
-  // std::vector<Real> TotalRho(_nss); // total dislocation density
+  std::vector<Real> sres(_nss);     // Taylor hardening + bow-out line tension
+  std::vector<Real> TotalRho(_nss); // total dislocation density
   
-  Real TotalRho = 0.0; // total dislocation density
+  // Real TotalRho = 0.0; // total dislocation density
 
   std::vector<Real> rho_edge_pos(_nss);
   std::vector<Real> rho_edge_neg(_nss);
@@ -680,25 +680,53 @@ FiniteStrainCrystalPlasticityDislo::updateGss()
   for (unsigned int i = 0; i < _nss; ++i)
     _accslip_tmp += std::abs(_slip_incr(i));
 
-  for (unsigned int i = 0; i < _nss; ++i)
-  {
-    TotalRho += (rho_edge_pos[i] + rho_edge_neg[i]);
-  }
-  
-  if (TotalRho >= 0.0)
-  {
-    sres = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho);
-  }
-  else
-  {
-    sres = 0.0;
-  }
-  
 
   for (unsigned int i = 0; i < _nss; ++i)
   {
-    _gss_tmp[i] = sres;
+    for (unsigned int j = 0; j < _nss; ++j)
+    {
+      if (j == i)
+        TotalRho[j] = (rho_edge_pos[i] + rho_edge_neg[i]);
+    }
   }
+
+  // TotalRho += rho_forest;
+  for (unsigned int i = 0; i < _nss; ++i)
+  {
+    if (TotalRho[i] >= 0.0)
+    {
+      sres[i] = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho[i]);
+    }
+    else
+    {
+      sres[i] = 0.0;
+    }
+  }
+
+  for (unsigned int i = 0; i < _nss; ++i)
+  {
+    _gss_tmp[i] = sres[i];
+  }
+
+  // for (unsigned int i = 0; i < _nss; ++i)
+  // {
+  //   TotalRho += (rho_edge_pos[i] + rho_edge_neg[i]);
+  // }
+  
+  // if (TotalRho >= 0.0)
+  // {
+  //   sres = _lambda * _mu * _burgers_vector_mag * std::sqrt(TotalRho);
+  // }
+  // else
+  // {
+  //   sres = 0.0;
+  // }
+  
+
+  // for (unsigned int i = 0; i < _nss; ++i)
+  // {
+  //   _gss_tmp[i] = sres;
+  // }
 }
 
 void

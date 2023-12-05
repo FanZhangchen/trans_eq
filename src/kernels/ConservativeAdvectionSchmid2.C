@@ -1,7 +1,3 @@
-// Nicolo Grilli
-// National University of Singapore
-// 16 Novembre 2020
-
 #include "ConservativeAdvectionSchmid2.h"
 #include "SystemBase.h"
 #include "libmesh/utility.h"

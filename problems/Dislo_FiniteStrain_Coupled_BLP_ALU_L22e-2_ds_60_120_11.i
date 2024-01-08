@@ -6,12 +6,12 @@
   [./gen]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 1
+    nx = 50
     ny = 50
     xmin = 0.0
     ymin = 0.0
-    xmax = 0.1
-    ymax = 1.0
+    xmax = 0.22
+    ymax = 0.22
   []
   [./pin_point]
     type = BoundingBoxNodeSetGenerator
@@ -32,16 +32,16 @@
       family = LAGRANGE
   []
   [rho_edge_pos_1]
-    initial_condition = 1.e6
+    initial_condition = 0.5e6
   []
   [rho_edge_neg_1]
-    initial_condition = 1.e6
+    initial_condition = 0.5e6
   []
   [rho_edge_pos_2]
-    initial_condition = 1.e6
+    initial_condition = 0.5e6
   []
   [rho_edge_neg_2]
-    initial_condition = 1.e6
+    initial_condition = 0.5e6
   []
 []
 
@@ -100,17 +100,12 @@
     family = MONOMIAL
   []
 
-  [accumulated_equivalent_plastic_strain]
-    order = CONSTANT
-    family = MONOMIAL
-  []
-
 []
 
 [Functions]
   [disp_load]
     type = ParsedFunction
-    value = '0.05*t'
+    value = '0.005*2.2*t'
   []
   [disp_p] 
     type = PiecewiseLinear
@@ -173,7 +168,7 @@
     variable = rho_edge_pos_2
     upwinding_type = full
       dislo_sign = positive
-      slip_sys_index = 1
+      slip_sys_index = 0
       dislo_character = edge
   []
 
@@ -186,7 +181,7 @@
     variable = rho_edge_neg_2
     upwinding_type = full
       dislo_sign = negative
-      slip_sys_index = 1
+      slip_sys_index = 0
       dislo_character = edge
   []
 
@@ -247,13 +242,6 @@
     type = MaterialRealAux
     variable = acc_slip
     property = acc_slip
-    execute_on = timestep_end
-  []
-
-  [acc_strain]
-    type = MaterialRealAux
-    variable = accumulated_equivalent_plastic_strain
-    property = accumulated_equivalent_plastic_strain
     execute_on = timestep_end
   []
 
@@ -359,42 +347,42 @@
       variable = disp_x
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
     [./auto_boundary_y]
       variable = disp_y
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
     [./auto_rho_edge_pos_boundary_x_1]
       variable = rho_edge_pos_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
     [./auto_rho_edge_neg_boundary_x_1]
       variable = rho_edge_neg_1
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
     [./auto_rho_edge_pos_boundary_x_2]
       variable = rho_edge_pos_2
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
     [./auto_rho_edge_neg_boundary_x_2]
       variable = rho_edge_neg_2
       primary = 'left'
     secondary = 'right'
-    translation = '0.1 0.0 0.0'
+    translation = '0.22 0.0 0.0'
     [../]
 
   [../]
@@ -435,7 +423,7 @@
     type = LineValueSampler
     variable = rho_edge_pos_1
     start_point = '0.005 0 0'
-    end_point = '0.005 1.0 0'
+    end_point = '0.005 0.22 0'
     num_points = 51
     sort_by = y
   []
@@ -443,7 +431,7 @@
     type = LineValueSampler
     variable = rho_edge_neg_1
     start_point = '0.005 0 0'
-    end_point = '0.005 1.0 0'
+    end_point = '0.005 0.22 0'
     num_points = 51
     sort_by = y
   []
@@ -454,7 +442,7 @@
   interval = 200
   [csv]
     type = CSV
-    file_base = rhoe_x_out_l1_BLP_rho0_double_60120
+    file_base = rhoe_x_out_l22e-2_BLP_rho0_double_60120_11
     execute_on = final
   []
 []

@@ -371,7 +371,7 @@ FiniteStrainCrystalPlasticityDislo::getSlipIncrements()
   for (unsigned int i = 0; i < _nss; ++i)
   {
     // temporary variable
-      // + rho_screw_pos[i] + rho_screw_neg[i];
+    // + rho_screw_pos[i] + rho_screw_neg[i];
 
     // calculate the backstress term
     _tau_backstress(i) =
